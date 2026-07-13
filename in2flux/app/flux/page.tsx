@@ -1,19 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+
+type Message = {
+  role: "user" | "flux";
+  content: string;
+};
 
 export default function FluxPage() {
   const [message, setMessage] = useState("");
-  const [reply, setReply] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
 
   async function sendMessage() {
     if (!message.trim()) return;
 
+    const userMessage = message;
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "user",
+        content: userMessage,
+      },
+    ]);
+
+    setMessage("");
+
     try {
       setLoading(true);
-      setReply("");
 
       const response = await fetch("/api/flux", {
         method: "POST",
@@ -21,138 +36,114 @@ export default function FluxPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message,
+          message: userMessage,
         }),
       });
 
       const data = await response.json();
 
-      if (data.error) {
-        setReply(data.error);
-      } else {
-        setReply(data.reply);
-      }
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "flux",
+          content: data.reply || data.error,
+        },
+      ]);
     } catch (error) {
-      console.error(error);
-      setReply("Flux connection failed.");
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "flux",
+          content: "Flux connection failed.",
+        },
+      ]);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black text-white">
+    <main className="min-h-screen bg-black text-white flex flex-col">
 
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-950 to-black" />
-
-      {/* Stars */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(150)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute h-1 w-1 rounded-full bg-white animate-pulse"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              opacity: Math.random() * 0.5 + 0.2,
-              animationDelay: `${Math.random() * 4}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Blue Glow */}
-      <div className="absolute h-[450px] w-[450px] rounded-full bg-blue-500/10 blur-3xl" />
-
-      {/* Main Content */}
-      <div className="relative z-10 flex w-full max-w-4xl flex-col items-center px-6">
-
-        <h1 className="mb-3 text-6xl font-extrabold tracking-wide">
+      <header className="p-6 border-b border-zinc-800">
+        <h1 className="text-4xl font-bold">
           In2Flux
         </h1>
 
-        <p className="mb-10 text-center text-lg text-zinc-400">
-          Every conversation leaves a mark.
+        <p className="text-zinc-400 mt-2">
+          Your thinking companion.
         </p>
+      </header>
 
-        {/* Navigation */}
-        <div className="mb-8 flex gap-5">
 
-          <Link href="/outline">
-            <button className="rounded-xl bg-blue-600 px-6 py-3 font-semibold transition duration-300 hover:scale-105 hover:bg-blue-500">
-              Outline
-            </button>
-          </Link>
+      <section className="flex-1 overflow-y-auto p-6 space-y-6">
 
-          <button
-            disabled
-            className="cursor-not-allowed rounded-xl bg-zinc-800 px-6 py-3 text-zinc-500"
+        {messages.length === 0 && (
+          <div className="text-center text-zinc-500 mt-20">
+            <h2 className="text-2xl mb-3">
+              Welcome to Flux
+            </h2>
+
+            <p>
+              Start a thought and begin building your mind map.
+            </p>
+          </div>
+        )}
+
+
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`max-w-3xl rounded-2xl p-5 ${
+              msg.role === "user"
+                ? "ml-auto bg-blue-600"
+                : "mr-auto bg-zinc-900 border border-zinc-800"
+            }`}
           >
-            Timeline
-          </button>
 
-        </div>
+            <p className="text-sm mb-2 opacity-60">
+              {msg.role === "user" ? "You" : "Flux"}
+            </p>
 
-        {/* Chat Box */}
-        <div className="w-full rounded-3xl border border-zinc-800 bg-zinc-900/70 p-6 backdrop-blur-xl shadow-2xl">
+            <p className="whitespace-pre-wrap leading-7">
+              {msg.content}
+            </p>
+
+          </div>
+        ))}
+
+
+        {loading && (
+          <div className="text-zinc-400 animate-pulse">
+            Flux is thinking...
+          </div>
+        )}
+
+      </section>
+
+
+      <footer className="p-6 border-t border-zinc-800">
+
+        <div className="flex gap-4">
 
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="What's on your mind?"
-            className="h-44 w-full resize-none rounded-2xl border border-zinc-700 bg-black/40 p-5 text-lg outline-none transition focus:border-blue-500"
+            className="flex-1 h-24 rounded-xl bg-zinc-900 border border-zinc-800 p-4 resize-none outline-none focus:border-blue-500"
           />
 
           <button
             onClick={sendMessage}
             disabled={loading}
-            className="mt-6 w-full rounded-2xl bg-white py-4 text-lg font-bold text-black transition duration-300 hover:scale-[1.02] hover:bg-zinc-300 disabled:opacity-50"
+            className="rounded-xl bg-white text-black px-6 font-bold hover:bg-zinc-300 disabled:opacity-50"
           >
-            {loading ? "Flux is Thinking..." : "Enter Flux"}
+            Enter Flux
           </button>
 
         </div>
 
-        {/* AI Response */}
-        <div className="mt-8 w-full rounded-3xl border border-zinc-800 bg-zinc-900/70 p-6 backdrop-blur-xl shadow-xl">
-
-          <h2 className="mb-4 text-xl font-semibold text-blue-400">
-            Flux
-          </h2>
-
-          {reply ? (
-            <p className="whitespace-pre-wrap leading-8 text-zinc-100">
-              {reply}
-            </p>
-          ) : (
-            <p className="italic text-zinc-500">
-              Flux is waiting for your first thought...
-            </p>
-          )}
-
-        </div>
-
-        {/* Thinking Framework */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm tracking-widest text-zinc-500">
-
-          <span>Observe</span>
-
-          <span>•</span>
-
-          <span>Decode</span>
-
-          <span>•</span>
-
-          <span>Reflect</span>
-
-          <span>•</span>
-
-          <span>Build</span>
-
-        </div>
-
-      </div>
+      </footer>
 
     </main>
   );
