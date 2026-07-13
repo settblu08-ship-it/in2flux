@@ -1,12 +1,12 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export async function POST(request: Request) {
   try {
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
     const { thought } = await request.json();
 
     const result = await openai.responses.create({
@@ -16,9 +16,9 @@ You are In2Flux, an AI thinking companion.
 
 A person shared this thought:
 
-${thought}
+"${thought}"
 
-Guide them using:
+Respond using this structure:
 
 Reflection:
 Pattern:
@@ -26,7 +26,7 @@ Perspective:
 Question:
 Next Step:
 
-Be human, insightful, and concise.
+Be thoughtful, human, and concise.
 `,
     });
 
@@ -35,6 +35,8 @@ Be human, insightful, and concise.
     });
 
   } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
       {
         error: "Reflection failed."
