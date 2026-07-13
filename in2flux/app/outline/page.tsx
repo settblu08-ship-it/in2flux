@@ -1,155 +1,132 @@
 "use client";
 
+import { motion } from "framer-motion";
+
 const nodes = [
-  {
-    id: 1,
-    title: "Identity",
-    top: "45%",
-    left: "50%",
-    color: "#f59e0b",
-    delay: "0s",
-  },
-  {
-    id: 2,
-    title: "Career",
-    top: "22%",
-    left: "28%",
-    color: "#3b82f6",
-    delay: "1s",
-  },
-  {
-    id: 3,
-    title: "Relationships",
-    top: "22%",
-    left: "72%",
-    color: "#ec4899",
-    delay: "2s",
-  },
-  {
-    id: 4,
-    title: "Philosophy",
-    top: "72%",
-    left: "28%",
-    color: "#ffffff",
-    delay: "3s",
-  },
-  {
-    id: 5,
-    title: "Goals",
-    top: "72%",
-    left: "72%",
-    color: "#22c55e",
-    delay: "4s",
-  },
+  "Vision",
+  "Goals",
+  "Ideas",
+  "Projects",
+  "Skills",
+  "Growth",
 ];
 
 export default function OutlinePage() {
-  return (
-    <main className="relative w-full h-screen overflow-hidden bg-black text-white">
 
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-950 to-black" />
+return (
 
-      {/* Stars */}
-      <div className="absolute inset-0">
-        {[...Array(120)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute h-1 w-1 rounded-full bg-white opacity-30 animate-pulse"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-            }}
-          />
-        ))}
-      </div>
+<main className="relative min-h-screen overflow-hidden bg-black text-white">
 
-      {/* Title */}
-      <div className="absolute top-8 left-8 z-20">
-        <h1 className="text-5xl font-bold">Outline</h1>
-        <p className="mt-2 text-zinc-400">
-          A living map of your thinking.
-        </p>
-      </div>
 
-      {/* Connection Lines */}
-      <svg className="absolute inset-0 h-full w-full">
-        <line
-          x1="50%"
-          y1="45%"
-          x2="28%"
-          y2="22%"
-          stroke="#3b82f6"
-          strokeWidth="2"
-          opacity="0.4"
-        />
-        <line
-          x1="50%"
-          y1="45%"
-          x2="72%"
-          y2="22%"
-          stroke="#ec4899"
-          strokeWidth="2"
-          opacity="0.4"
-        />
-        <line
-          x1="50%"
-          y1="45%"
-          x2="28%"
-          y2="72%"
-          stroke="#ffffff"
-          strokeWidth="2"
-          opacity="0.4"
-        />
-        <line
-          x1="50%"
-          y1="45%"
-          x2="72%"
-          y2="72%"
-          stroke="#22c55e"
-          strokeWidth="2"
-          opacity="0.4"
-        />
-      </svg>
+{/* Starfield */}
 
-      {/* Nodes */}
-      {nodes.map((node) => (
-        <div
-          key={node.id}
-          style={{
-            top: node.top,
-            left: node.left,
-            transform: "translate(-50%, -50%)",
-            backgroundColor: `${node.color}33`,
-            borderColor: node.color,
-            boxShadow: `0 0 35px ${node.color}`,
-            animationDelay: node.delay,
-          }}
-          className="
-            absolute
-            flex
-            h-32
-            w-32
-            cursor-pointer
-            items-center
-            justify-center
-            rounded-full
-            border
-            text-center
-            text-lg
-            font-semibold
-            transition-all
-            duration-300
-            hover:scale-110
-            hover:shadow-2xl
-            animate-pulse
-          "
-        >
-          {node.title}
-        </div>
-      ))}
+<div className="absolute inset-0">
 
-    </main>
-  );
+{Array.from({length:80}).map((_,i)=>(
+
+<motion.div
+
+key={i}
+
+className="absolute h-1 w-1 rounded-full bg-white"
+
+initial={{
+x:`${Math.random()*100}%`,
+y:`${Math.random()*100}%`,
+opacity:.3
+}}
+
+animate={{
+opacity:[.3,1,.3]
+}}
+
+transition={{
+duration:3+Math.random()*5,
+repeat:Infinity
+}}
+
+/>
+
+))}
+
+</div>
+
+
+
+{/* Title */}
+
+<div className="relative z-10 text-center pt-10">
+
+<h1 className="text-5xl font-bold">
+Outline
+</h1>
+
+<p className="text-zinc-400 mt-3">
+The map of your mind
+</p>
+
+</div>
+
+
+
+{/* Nodes */}
+
+<div className="relative z-10 flex flex-wrap justify-center gap-8 mt-20 px-8">
+
+
+{nodes.map((node,index)=>(
+
+<motion.div
+
+key={node}
+
+initial={{
+opacity:0,
+scale:.5
+}}
+
+animate={{
+opacity:1,
+scale:1,
+y:[0,-10,0]
+}}
+
+transition={{
+delay:index*.2,
+duration:3,
+repeat:Infinity
+}}
+
+className="
+h-32
+w-32
+rounded-full
+flex
+items-center
+justify-center
+text-center
+bg-white/10
+border
+border-purple-400/40
+backdrop-blur-xl
+shadow-lg
+"
+
+>
+
+{node}
+
+</motion.div>
+
+))}
+
+
+</div>
+
+
+
+</main>
+
+);
+
 }
