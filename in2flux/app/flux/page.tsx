@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 type Message = {
   role: "user" | "flux";
@@ -9,248 +10,364 @@ type Message = {
 };
 
 export default function FluxPage() {
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const [message,setMessage] = useState("");
-  const [messages,setMessages] = useState<Message[]>([]);
-  const [loading,setLoading] = useState(false);
+  const [orbColor, setOrbColor] = useState("#3b82f6");
 
 
-  async function sendMessage(){
-
-    if(!message.trim()) return;
+  async function sendMessage() {
+    if (!message.trim()) return;
 
     const userMessage = message;
 
-    setMessages(prev=>[
+    setMessages((prev) => [
       ...prev,
       {
-        role:"user",
-        content:userMessage
-      }
+        role: "user",
+        content: userMessage,
+      },
     ]);
 
     setMessage("");
 
-    try{
-
+    try {
       setLoading(true);
 
-      const response = await fetch("/api/flux",{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
+      const response = await fetch("/api/flux", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        body:JSON.stringify({
-          message:userMessage
-        })
+        body: JSON.stringify({
+          message: userMessage,
+        }),
       });
-
 
       const data = await response.json();
 
-
-      setMessages(prev=>[
+      setMessages((prev) => [
         ...prev,
         {
-          role:"flux",
-          content:data.reply || data.error
-        }
+          role: "flux",
+          content: data.reply || data.error,
+        },
       ]);
 
+    } catch {
 
-    }catch{
-
-      setMessages(prev=>[
+      setMessages((prev) => [
         ...prev,
         {
-          role:"flux",
-          content:"Flux connection failed."
-        }
+          role: "flux",
+          content: "Flux connection failed.",
+        },
       ]);
 
-    }finally{
-
+    } finally {
       setLoading(false);
-
     }
-
   }
 
 
-return (
+  return (
 
-<main className="relative min-h-screen overflow-hidden bg-black text-white flex flex-col">
+    <main className="relative min-h-screen overflow-hidden bg-black text-white flex flex-col">
 
 
-{/* STAR BACKGROUND */}
+      {/* Space Background */}
 
-<div className="absolute inset-0">
+      <div className="absolute inset-0">
 
-{Array.from({length:80}).map((_,i)=>(
+        {[...Array(120)].map((_, i) => (
 
-<motion.div
-key={i}
-className="absolute w-1 h-1 bg-white rounded-full"
-initial={{
-x:`${Math.random()*100}%`,
-y:`${Math.random()*100}%`
-}}
-animate={{
-opacity:[0.2,1,0.2],
-}}
-transition={{
-duration:3+Math.random()*5,
-repeat:Infinity
-}}
-/>
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-white"
+            style={{
+              width: Math.random() * 3 + 1,
+              height: Math.random() * 3 + 1,
+            }}
+            initial={{
+              x:`${Math.random()*100}%`,
+              y:`${Math.random()*100}%`,
+              opacity:0.2
+            }}
+            animate={{
+              opacity:[0.2,1,0.2],
+            }}
+            transition={{
+              duration:3+Math.random()*5,
+              repeat:Infinity
+            }}
+          />
 
-))}
+        ))}
 
-</div>
+      </div>
 
 
 
-{/* HEADER */}
+      {/* Header */}
 
-<header className="relative z-10 text-center p-8">
+      <header className="relative z-10 text-center pt-8">
 
-<h1 className="text-5xl font-bold">
-In2Flux
-</h1>
+        <h1 className="text-5xl font-bold tracking-widest">
+          In2Flux
+        </h1>
 
-<p className="text-zinc-400">
-Your thinking companion
-</p>
+        <p className="text-zinc-400 mt-2">
+          Your thinking companion
+        </p>
 
-</header>
+      </header>
 
 
 
 
-{/* FLUX ORB */}
+      {/* Flux Orb */}
 
-<div className="relative z-10 flex justify-center py-6">
+      <section className="relative z-10 flex flex-col items-center py-8">
 
-<motion.div
 
-className="h-40 w-40 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-400 blur-xl"
+        <motion.div
 
-animate={{
-scale:[1,1.1,1]
-}}
+          className="absolute h-72 w-72 rounded-full blur-3xl"
 
-transition={{
-duration:4,
-repeat:Infinity
-}}
+          style={{
+            backgroundColor:orbColor
+          }}
 
-/>
+          animate={{
+            scale:[1,1.2,1],
+            opacity:[0.4,0.8,0.4]
+          }}
 
-</div>
+          transition={{
+            duration:5,
+            repeat:Infinity
+          }}
 
+        />
 
 
+        <motion.div
 
-{/* CHAT */}
+          className="h-44 w-44 rounded-full shadow-2xl"
 
-<section className="relative z-10 flex-1 overflow-y-auto p-6 space-y-5">
+          style={{
+            background:
+            `radial-gradient(circle at 30% 30%, white, ${orbColor})`
+          }}
 
+          animate={{
+            scale:[1,1.08,1]
+          }}
 
-{messages.map((msg,index)=>(
+          transition={{
+            duration:4,
+            repeat:Infinity
+          }}
 
-<motion.div
+        />
 
-key={index}
 
-initial={{
-opacity:0,
-y:20
-}}
+        <div className="mt-8 flex items-center gap-3">
 
-animate={{
-opacity:1,
-y:0
-}}
+          <span className="text-sm text-zinc-400">
+            Choose Flux Core
+          </span>
 
-className={`rounded-3xl p-5 max-w-3xl ${
-msg.role==="user"
-?"ml-auto bg-blue-600"
-:"mr-auto bg-zinc-900 border border-zinc-700"
-}`}
 
->
+          <input
 
-<p className="text-xs opacity-60">
-{msg.role==="user"?"You":"Flux"}
-</p>
+            type="color"
 
+            value={orbColor}
 
-<p>
-{msg.content}
-</p>
+            onChange={(e)=>setOrbColor(e.target.value)}
 
+            className="h-10 w-10 cursor-pointer rounded-full"
 
-</motion.div>
+          />
 
-))}
+        </div>
 
 
+      </section>
 
-{loading && (
 
-<div className="text-zinc-400 animate-pulse">
-Flux is thinking...
-</div>
 
-)}
 
 
-</section>
+      {/* Chat */}
 
+      <section className="relative z-10 flex-1 overflow-y-auto px-6 space-y-5">
 
 
+        {messages.length === 0 && (
 
-{/* INPUT */}
+          <div className="text-center text-zinc-400 mt-10">
 
-<footer className="relative z-10 p-6">
+            <h2 className="text-2xl text-white">
+              Welcome to Flux
+            </h2>
 
-<div className="flex gap-3">
+            <p className="mt-2">
+              Start a thought and watch it evolve.
+            </p>
 
+          </div>
 
-<textarea
+        )}
 
-value={message}
 
-onChange={(e)=>setMessage(e.target.value)}
 
-placeholder="What's on your mind?"
+        {messages.map((msg,index)=>(
 
-className="flex-1 rounded-2xl bg-zinc-900 p-4"
+          <motion.div
 
-/>
+            key={index}
 
+            initial={{
+              opacity:0,
+              y:20
+            }}
 
-<button
+            animate={{
+              opacity:1,
+              y:0
+            }}
 
-onClick={sendMessage}
+            className={`max-w-3xl rounded-3xl p-5 backdrop-blur-xl border ${
+              
+              msg.role==="user"
 
-className="bg-white text-black rounded-2xl px-6"
+              ? "ml-auto border-blue-400/40 bg-blue-600/60"
 
->
+              : "mr-auto border-white/20 bg-white/10"
 
-Enter Flux
+            }`}
 
-</button>
+          >
 
+            <p className="text-xs opacity-50 mb-2">
+              {msg.role==="user"?"You":"Flux"}
+            </p>
 
-</div>
+            <p className="leading-7 whitespace-pre-wrap">
+              {msg.content}
+            </p>
 
-</footer>
 
+          </motion.div>
 
+        ))}
 
-</main>
 
-);
 
+        {loading && (
+
+          <motion.div
+
+          animate={{
+            opacity:[0.3,1,0.3]
+          }}
+
+          transition={{
+            repeat:Infinity,
+            duration:1.5
+          }}
+
+          className="text-zinc-400"
+          
+          >
+            Flux is thinking...
+          </motion.div>
+
+        )}
+
+
+      </section>
+
+
+
+
+
+      {/* Navigation */}
+
+      <div className="relative z-10 grid grid-cols-2 gap-4 p-6">
+
+
+        <Link href="/outline">
+
+          <div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl p-5 text-center">
+            Outline
+          </div>
+
+        </Link>
+
+
+
+        <Link href="/timeline">
+
+          <div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl p-5 text-center">
+            Timeline
+          </div>
+
+        </Link>
+
+
+      </div>
+
+
+
+
+
+      {/* Input */}
+
+      <footer className="relative z-10 p-6">
+
+
+        <div className="flex gap-3 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 p-4">
+
+
+          <textarea
+
+          value={message}
+
+          onChange={(e)=>setMessage(e.target.value)}
+
+          placeholder="What's on your mind?"
+
+          className="flex-1 bg-transparent outline-none resize-none"
+
+          />
+
+
+          <button
+
+          onClick={sendMessage}
+
+          disabled={loading}
+
+          className="rounded-2xl bg-white text-black px-6 font-bold"
+
+          >
+
+            Enter Flux
+
+          </button>
+
+
+        </div>
+
+
+      </footer>
+
+
+    </main>
+
+  );
 }
