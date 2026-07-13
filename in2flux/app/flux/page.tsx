@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export default function FluxPage() {
   const [message, setMessage] = useState("");
@@ -39,28 +40,52 @@ export default function FluxPage() {
 
   return (
     <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
-      <h1 className="text-4xl font-bold mb-6">
+
+      <h1 className="text-5xl font-bold mb-2">
         In2Flux
       </h1>
 
+      <p className="text-zinc-400 mb-8">
+        Think. Reflect. Grow.
+      </p>
+
+      <div className="flex gap-4 mb-8">
+        <Link href="/outline">
+          <button className="rounded-lg bg-blue-600 px-6 py-3 font-semibold transition hover:bg-blue-700">
+            Outline
+          </button>
+        </Link>
+
+        <button className="rounded-lg bg-zinc-800 px-6 py-3 text-zinc-400 cursor-not-allowed">
+          Timeline
+        </button>
+      </div>
+
       <textarea
-        className="w-full max-w-xl h-40 bg-zinc-900 rounded-lg p-4"
+        className="w-full max-w-xl h-40 rounded-xl bg-zinc-900 p-4 outline-none border border-zinc-800 focus:border-blue-500"
         placeholder="What's on your mind?"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
       />
 
       <button
-        className="mt-4 bg-white text-black px-6 py-3 rounded-lg"
+        className="mt-5 rounded-xl bg-white px-8 py-3 font-semibold text-black transition hover:bg-zinc-300 disabled:opacity-50"
         onClick={sendMessage}
         disabled={loading}
       >
         {loading ? "Thinking..." : "Enter Flux"}
       </button>
 
-      <div className="mt-6 max-w-xl">
-        {reply}
+      <div className="mt-8 w-full max-w-xl rounded-xl border border-zinc-800 bg-zinc-900 p-6 min-h-[120px]">
+        {reply ? (
+          <p className="whitespace-pre-wrap">{reply}</p>
+        ) : (
+          <p className="text-zinc-500">
+            Flux is ready to think with you...
+          </p>
+        )}
       </div>
+
     </main>
   );
 }
