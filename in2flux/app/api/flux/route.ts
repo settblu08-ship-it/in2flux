@@ -1,90 +1,94 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import OpenAI from "openai";
+import { createClient } from "@supabase/supabase-js";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_PUBLISHABLE_KEY!;
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error("Missing Supabase environment variables");
+}
 
 const supabase = createClient(
   supabaseUrl,
   supabaseKey
 );
 
-type Memory = {
-  content: string;
-};
-
 export async function POST(req: Request) {
   try {
     const { message } = await req.json();
 
-    const { data: memories } = await supabase
+    if (!message) {
+      return NextResponse.json(
+        { error: "No message provided" },
+        { status: 400 }
+      );
+    }
+
+    // Get previous memories
+    const { data: memories, error: memoryError } = await supabase
       .from("memories")
       .select("content")
-      .order("created_at", {
-        ascending: false,
-      })
+      .order("created_at", { ascending: false })
       .limit(10);
 
+    if (memoryError) {
+      console.log(memoryError);
+    }
 
-    const previousMemories =
-      (memories as Memory[] | null)
-        ?.map((memory: Memory) => memory.content)
-        .join("\n\n") || "No memories yet.";
+    const context = memories
+      ?.map((item) => item.content)
+      .join("\n") || "";
 
-
-    const response =
-      await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: `
-You are Flux, an AI thinking companion.
-
-Help the user understand their thinking,
-patterns, ideas, and growth.
-
-Previous memories:
-${previousMemories}
-`,
-          },
-          {
-            role: "user",
-            content: message,
-          },
-        ],
-      });
-
+    // Ask Flux
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are Flux, an AI thinking companion. Use memory when helpful. Help the user reflect, plan, and grow.",
+        },
+        {
+          role: "system",
+          content: `Previous memories:\n${context}`,
+        },
+        {
+          role: "user",
+          content: message,
+        },
+      ],
+    });
 
     const reply =
       response.choices[0].message.content ||
-      "No response.";
+      "I couldn't generate a response.";
 
-
-    await supabase
-      .from("memories")
-      .insert({
+    // Save memory
+    await supabase.from("memories").insert([
+      {
         content: `User: ${message}\nFlux: ${reply}`,
-      });
-
+      },
+    ]);
 
     return NextResponse.json({
       reply,
     });
 
-
   } catch (error) {
-
     console.error(error);
 
-    return NextResponse.json({
-      error: "Flux connection failed.",
-    });
-
+    return NextResponse.json(
+      {
+        error: "Flux encountered an error",
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }
