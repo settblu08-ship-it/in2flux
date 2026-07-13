@@ -6,71 +6,71 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const supabaseUrl = process.env.SUPABASE_URL!;
+const supabaseKey = process.env.SUPABASE_PUBLISHABLE_KEY!;
+
 const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_PUBLISHABLE_KEY!
+  supabaseUrl,
+  supabaseKey
 );
+
+type Memory = {
+  content: string;
+};
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const { message } = await req.json();
 
-    const userMessage = body.message;
-
-    // Get previous memories
     const { data: memories } = await supabase
       .from("memories")
-      .select("*")
-      .order("created_at", { ascending: false })
+      .select("content")
+      .order("created_at", {
+        ascending: false,
+      })
       .limit(10);
 
 
-    const memoryContext =
-      memories
-        ?.map((memory) => memory.content)
-        .join("\n") || "";
+    const previousMemories =
+      (memories as Memory[] | null)
+        ?.map((memory: Memory) => memory.content)
+        .join("\n\n") || "No memories yet.";
 
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-
-      messages: [
-        {
-          role: "system",
-          content: `
+    const response =
+      await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: `
 You are Flux, an AI thinking companion.
 
-Your purpose is to help users understand their own thinking.
-
-Use previous memories when helpful.
+Help the user understand their thinking,
+patterns, ideas, and growth.
 
 Previous memories:
-${memoryContext}
+${previousMemories}
 `,
-        },
-
-        {
-          role: "user",
-          content: userMessage,
-        },
-      ],
-    });
+          },
+          {
+            role: "user",
+            content: message,
+          },
+        ],
+      });
 
 
     const reply =
       response.choices[0].message.content ||
-      "Flux had no response.";
+      "No response.";
 
 
-    // Save memory
     await supabase
       .from("memories")
-      .insert([
-        {
-          content:
-            `User: ${userMessage}\nFlux: ${reply}`,
-        },
-      ]);
+      .insert({
+        content: `User: ${message}\nFlux: ${reply}`,
+      });
 
 
     return NextResponse.json({
@@ -83,7 +83,7 @@ ${memoryContext}
     console.error(error);
 
     return NextResponse.json({
-      error: "Flux memory system failed.",
+      error: "Flux connection failed.",
     });
 
   }
