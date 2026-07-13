@@ -1,90 +1,59 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { createClient } from "@supabase/supabase-js";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const memoryPath = path.join(
-  process.cwd(),
-  "data",
-  "memory.json"
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_PUBLISHABLE_KEY!
 );
 
-function getMemory() {
-  if (!fs.existsSync(memoryPath)) {
-    return {
-      conversations: [],
-    };
-  }
-
-  const data = fs.readFileSync(memoryPath, "utf-8");
-
-  return JSON.parse(data);
-}
-
-function saveMemory(memory: any) {
-  fs.writeFileSync(
-    memoryPath,
-    JSON.stringify(memory, null, 2)
-  );
-}
-
-
 export async function POST(req: Request) {
-
   try {
-
     const body = await req.json();
 
     const userMessage = body.message;
 
+    // Get previous memories
+    const { data: memories } = await supabase
+      .from("memories")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(10);
 
-    const memory = getMemory();
 
-
-    const previousContext =
-      memory.conversations
-        .slice(-10)
-        .map(
-          (item:any) =>
-            `User: ${item.user}\nFlux: ${item.flux}`
-        )
-        .join("\n\n");
+    const memoryContext =
+      memories
+        ?.map((memory) => memory.content)
+        .join("\n") || "";
 
 
     const response = await openai.chat.completions.create({
-
       model: "gpt-4o-mini",
 
       messages: [
-
         {
           role: "system",
-          content:
-          `
+          content: `
 You are Flux, an AI thinking companion.
 
-Your purpose is not only to answer questions,
-but to help the user understand their thinking.
+Your purpose is to help users understand their own thinking.
 
-Use previous conversation context when useful.
+Use previous memories when helpful.
 
 Previous memories:
-
-${previousContext}
-`
+${memoryContext}
+`,
         },
 
         {
           role: "user",
           content: userMessage,
-        }
-
+        },
       ],
-
     });
 
 
@@ -93,18 +62,15 @@ ${previousContext}
       "Flux had no response.";
 
 
-    memory.conversations.push({
-
-      user: userMessage,
-
-      flux: reply,
-
-      date: new Date().toISOString(),
-
-    });
-
-
-    saveMemory(memory);
+    // Save memory
+    await supabase
+      .from("memories")
+      .insert([
+        {
+          content:
+            `User: ${userMessage}\nFlux: ${reply}`,
+        },
+      ]);
 
 
     return NextResponse.json({
@@ -112,14 +78,13 @@ ${previousContext}
     });
 
 
-  } catch(error) {
+  } catch (error) {
 
     console.error(error);
 
     return NextResponse.json({
-      error: "Flux memory system failed."
+      error: "Flux memory system failed.",
     });
 
   }
-
 }
