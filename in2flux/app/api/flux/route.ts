@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import OpenAI from "openai";
 import { createClient } from "@supabase/supabase-js";
+import OpenAI from "openai";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -13,10 +13,11 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error("Missing Supabase environment variables");
 }
 
-const supabase = createClient(
-  supabaseUrl,
-  supabaseKey
-);
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+type Memory = {
+  content: string;
+};
 
 export async function POST(req: Request) {
   try {
@@ -24,12 +25,12 @@ export async function POST(req: Request) {
 
     if (!message) {
       return NextResponse.json(
-        { error: "No message provided" },
+        { error: "No message provided." },
         { status: 400 }
       );
     }
 
-    // Get previous memories
+    // Load previous memories
     const { data: memories, error: memoryError } = await supabase
       .from("memories")
       .select("content")
@@ -37,25 +38,28 @@ export async function POST(req: Request) {
       .limit(10);
 
     if (memoryError) {
-      console.log(memoryError);
+      console.error("Memory fetch error:", memoryError);
     }
 
-    const context = memories
-      ?.map((item) => item.content)
-      .join("\n") || "";
+    const previousMemories =
+      (memories as Memory[] | null)
+        ?.map((m) => m.content)
+        .join("\n\n") || "No previous memories.";
 
-    // Ask Flux
-    const response = await openai.chat.completions.create({
+    // Ask OpenAI
+    const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
-          content:
-            "You are Flux, an AI thinking companion. Use memory when helpful. Help the user reflect, plan, and grow.",
-        },
-        {
-          role: "system",
-          content: `Previous memories:\n${context}`,
+          content: `You are Flux, an AI thinking companion.
+
+Help users understand their thoughts, patterns, and ideas.
+
+Use previous memories whenever they are relevant.
+
+Previous memories:
+${previousMemories}`,
         },
         {
           role: "user",
@@ -65,26 +69,42 @@ export async function POST(req: Request) {
     });
 
     const reply =
-      response.choices[0].message.content ||
-      "I couldn't generate a response.";
+      completion.choices[0].message.content ??
+      "Flux had no response.";
 
     // Save memory
-    await supabase.from("memories").insert([
-      {
+    const { data: inserted, error: insertError } = await supabase
+      .from("memories")
+      .insert({
         content: `User: ${message}\nFlux: ${reply}`,
-      },
-    ]);
+      })
+      .select();
+
+    if (insertError) {
+      console.error("Supabase insert error:", insertError);
+
+      return NextResponse.json(
+        {
+          error: "Failed to save memory.",
+          details: insertError.message,
+        },
+        {
+          status: 500,
+        }
+      );
+    }
+
+    console.log("Memory saved:", inserted);
 
     return NextResponse.json({
       reply,
     });
-
   } catch (error) {
-    console.error(error);
+    console.error("Flux Route Error:", error);
 
     return NextResponse.json(
       {
-        error: "Flux encountered an error",
+        error: "Flux connection failed.",
       },
       {
         status: 500,
