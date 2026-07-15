@@ -17,119 +17,156 @@ const colors = [
   { name: "Energy Red", color: "#ef4444" },
 ];
 
+
 export default function FluxPage() {
 
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const [orbColor, setOrbColor] = useState("#3b82f6");
-
-
-  async function sendMessage() {
-
-    if (!message.trim()) return;
-
-    const userMessage = message;
-
-    setMessages((prev)=>[
-      ...prev,
-      {
-        role:"user",
-        content:userMessage
-      }
-    ]);
-
-    setMessage("");
-
-    try {
-
-      setLoading(true);
+const [message,setMessage]=useState("");
+const [messages,setMessages]=useState<Message[]>([]);
+const [loading,setLoading]=useState(false);
+const [orbColor,setOrbColor]=useState("#a855f7");
 
 
-      const response = await fetch("/api/flux",{
+async function sendMessage(){
 
-        method:"POST",
+if(!message.trim()) return;
 
-        headers:{
-          "Content-Type":"application/json"
-        },
+const userMessage=message;
 
-        body:JSON.stringify({
-          message:userMessage
-        })
+setMessages(prev=>[
+...prev,
+{
+role:"user",
+content:userMessage
+}
+]);
 
-      });
+setMessage("");
 
+try{
 
-      const data = await response.json();
+setLoading(true);
 
+const response=await fetch("/api/flux",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+message:userMessage
+})
+});
 
-      setMessages((prev)=>[
-        ...prev,
-        {
-          role:"flux",
-          content:data.reply || data.error
-        }
-      ]);
+const data=await response.json();
 
+setMessages(prev=>[
+...prev,
+{
+role:"flux",
+content:data.reply || data.error
+}
+]);
 
-    } catch {
+}catch{
 
+setMessages(prev=>[
+...prev,
+{
+role:"flux",
+content:"Flux connection failed."
+}
+]);
 
-      setMessages((prev)=>[
-        ...prev,
-        {
-          role:"flux",
-          content:"Flux connection failed."
-        }
-      ]);
+}
+finally{
+setLoading(false);
+}
 
-
-    } finally {
-
-      setLoading(false);
-
-    }
-
-  }
+}
 
 
 
-  return (
+return (
 
-<main className="relative min-h-screen overflow-hidden bg-black text-white flex flex-col">
+<main className="
+relative
+min-h-screen
+overflow-hidden
+text-white
+flex
+flex-col
+">
 
 
-{/* Stars */}
+{/* Mystical sanctuary */}
 
-<div className="absolute inset-0">
+<div className="
+absolute
+inset-0
+bg-gradient-to-b
+from-amber-950
+via-purple-950
+to-indigo-950
+"/>
 
-{[...Array(120)].map((_,i)=>(
+
+{/* Soft room lighting */}
+
+<motion.div
+
+animate={{
+scale:[1,1.15,1],
+opacity:[.25,.5,.25]
+}}
+
+transition={{
+duration:10,
+repeat:Infinity
+}}
+
+className="
+absolute
+top-0
+left-1/2
+-translate-x-1/2
+h-[800px]
+w-[800px]
+rounded-full
+bg-purple-400/20
+blur-[160px]
+"
+
+/>
+
+
+
+{/* Floating aura particles */}
+
+{Array.from({length:100}).map((_,i)=>(
 
 <motion.div
 
 key={i}
 
-className="absolute rounded-full bg-white"
+className="
+absolute
+rounded-full
+bg-white/70
+"
 
 style={{
-width:Math.random()*3+1,
-height:Math.random()*3+1
-}}
-
-initial={{
-x:`${Math.random()*100}%`,
-y:`${Math.random()*100}%`,
-opacity:.2
+width:Math.random()*4+1,
+height:Math.random()*4+1,
+left:`${Math.random()*100}%`,
+top:`${Math.random()*100}%`
 }}
 
 animate={{
+y:[0,-40,0],
 opacity:[.2,1,.2]
 }}
 
 transition={{
-duration:3+Math.random()*5,
+duration:5+Math.random()*5,
 repeat:Infinity
 }}
 
@@ -137,21 +174,34 @@ repeat:Infinity
 
 ))}
 
-</div>
 
 
 
 
-{/* Header */}
+<header className="
+relative
+z-10
+text-center
+pt-10
+">
 
-<header className="relative z-10 text-center pt-8">
+<h1 className="
+text-6xl
+font-bold
+tracking-widest
+">
 
-<h1 className="text-5xl font-bold tracking-widest">
 In2Flux
+
 </h1>
 
-<p className="text-zinc-400 mt-2">
-Your thinking companion
+<p className="
+mt-3
+text-zinc-200
+">
+
+Enter the space where thoughts become understood
+
 </p>
 
 </header>
@@ -160,39 +210,43 @@ Your thinking companion
 
 
 
-{/* Orb */}
 
-<section className="relative z-10 flex flex-col items-center py-10">
+
+{/* Soul Orb */}
+
+<section className="
+relative
+z-10
+flex
+justify-center
+py-12
+">
 
 
 <motion.div
 
-className="absolute h-80 w-80 rounded-full blur-3xl"
-
 animate={{
-
 scale:loading
-?[1,1.35,1]
-:[1,1.15,1],
-
-opacity:[.35,.8,.35]
-
+?[1,1.5,1]
+:[1,1.2,1]
 }}
 
 transition={{
-
-duration:loading?2:5,
-
+duration:loading?1.5:6,
 repeat:Infinity
-
 }}
 
+className="
+absolute
+h-[450px]
+w-[450px]
+rounded-full
+blur-[90px]
+"
+
 style={{
-
 backgroundColor:orbColor,
-
-boxShadow:`0 0 80px ${orbColor}`
-
+opacity:.35
 }}
 
 />
@@ -201,86 +255,120 @@ boxShadow:`0 0 80px ${orbColor}`
 
 <motion.div
 
-className="relative h-48 w-48 rounded-full"
-
 animate={{
-
-scale:[1,1.08,1]
-
+rotate:360,
+y:[0,-15,0]
 }}
 
 transition={{
-
-duration:4,
-
+rotate:{
+duration:40,
+repeat:Infinity,
+ease:"linear"
+},
+y:{
+duration:5,
 repeat:Infinity
-
+}
 }}
+
+className="
+relative
+h-72
+w-72
+rounded-full
+flex
+items-center
+justify-center
+overflow-hidden
+border
+border-white/40
+shadow-2xl
+"
 
 style={{
 
 background:
-
-`radial-gradient(circle at 30% 30%, white, ${orbColor})`,
+`
+radial-gradient(
+circle at 30% 25%,
+white,
+${orbColor},
+#090014
+)
+`,
 
 boxShadow:
-
 `
-0 0 40px ${orbColor},
-0 0 100px ${orbColor}
+0 0 80px ${orbColor},
+0 0 160px ${orbColor}
 `
 
 }}
 
-/>
+>
+
+
+{/* Aura rings */}
+
+<div className="
+absolute
+h-64
+w-64
+rounded-full
+border
+border-white/20
+"/>
+
+
+<div className="
+absolute
+h-48
+w-48
+rounded-full
+border
+border-white/20
+"/>
+
+
+{/* Energy bubbles */}
+
+<div className="
+absolute
+top-14
+left-20
+h-7
+w-7
+rounded-full
+bg-white
+opacity-80
+"/>
+
+
+<div className="
+absolute
+bottom-20
+right-16
+h-10
+w-10
+rounded-full
+bg-white/30
+"/>
 
 
 
+<span className="
+relative
+text-5xl
+font-bold
+">
 
-<div className="mt-10 text-center">
+Flux
 
-
-<p className="text-sm text-zinc-400 mb-4">
-Choose Flux Core
-</p>
-
-
-
-<div className="flex gap-4 flex-wrap justify-center">
+</span>
 
 
-{colors.map(({name,color})=>(
-
-<button
-
-key={name}
-
-title={name}
-
-onClick={()=>setOrbColor(color)}
-
-className={`h-10 w-10 rounded-full transition-all duration-500 ${
-orbColor===color
-?"ring-4 ring-white scale-125"
-:"opacity-80 hover:scale-110"
-}`}
-
-style={{
-
-backgroundColor:color,
-
-boxShadow:`0 0 20px ${color}`
-
-}}
-
-/>
-
-))}
-
-
-</div>
-
-</div>
+</motion.div>
 
 
 </section>
@@ -290,31 +378,64 @@ boxShadow:`0 0 20px ${color}`
 
 
 
-{/* Chat */}
+{/* Aura controls */}
 
-<section className="relative z-10 flex-1 overflow-y-auto px-6 space-y-5">
+<div className="
+relative
+z-10
+flex
+justify-center
+gap-5
+flex-wrap
+">
 
+{colors.map(item=>(
 
-{messages.length===0 &&
+<button
 
-<div className="text-center text-zinc-400 mt-10">
+key={item.name}
 
-<h2 className="text-2xl text-white">
-Welcome to Flux
-</h2>
+onClick={()=>setOrbColor(item.color)}
 
-<p className="mt-2">
-Start a thought and watch it evolve.
-</p>
+className="
+h-12
+w-12
+rounded-full
+transition
+"
+
+style={{
+background:item.color,
+boxShadow:`0 0 30px ${item.color}`
+}}
+
+/>
+
+))}
 
 </div>
 
-}
 
+
+
+
+
+
+
+{/* Conversation */}
+
+<section className="
+relative
+z-10
+flex-1
+overflow-y-auto
+px-6
+mt-10
+space-y-6
+">
 
 
 {messages.map((msg,index)=>(
-
 
 <motion.div
 
@@ -322,7 +443,7 @@ key={index}
 
 initial={{
 opacity:0,
-y:20
+y:30
 }}
 
 animate={{
@@ -330,58 +451,58 @@ opacity:1,
 y:0
 }}
 
-className={`max-w-3xl rounded-3xl p-5 backdrop-blur-xl border ${
+className={`
+max-w-3xl
+rounded-[30px]
+p-6
+backdrop-blur-xl
+border
+${
 msg.role==="user"
-?"ml-auto border-blue-400/40 bg-blue-600/60"
-:"mr-auto border-white/20 bg-white/10"
-}`}
+?
+"ml-auto bg-white/20 border-white/30"
+:
+"mr-auto bg-purple-500/20 border-purple-300/30"
+}
+`}
 
 >
 
-
-<p className="text-xs opacity-50 mb-2">
+<p className="text-xs opacity-60">
 
 {msg.role==="user"?"You":"Flux"}
 
 </p>
 
 
-<p className="leading-7 whitespace-pre-wrap">
+<p className="
+mt-3
+leading-8
+whitespace-pre-wrap
+">
 
 {msg.content}
 
 </p>
 
-
 </motion.div>
-
 
 ))}
 
 
+{loading && (
 
-{loading &&
+<div className="
+text-center
+text-zinc-200
+animate-pulse
+">
 
-<motion.div
+Flux is feeling the thought...
 
-animate={{
-opacity:[.3,1,.3]
-}}
+</div>
 
-transition={{
-duration:1.5,
-repeat:Infinity
-}}
-
-className="text-zinc-400"
-
->
-
-Flux is thinking...
-
-</motion.div>
-
-}
+)}
 
 
 </section>
@@ -391,43 +512,23 @@ Flux is thinking...
 
 
 
-{/* Navigation */}
-
-<div className="relative z-10 grid grid-cols-2 gap-4 p-6">
-
-
-<Link href="/outline">
-
-<div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl p-5 text-center">
-Outline
-</div>
-
-</Link>
+<footer className="
+relative
+z-10
+p-6
+">
 
 
-
-<Link href="/timeline">
-
-<div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl p-5 text-center">
-Timeline
-</div>
-
-</Link>
-
-
-</div>
-
-
-
-
-
-
-{/* Input */}
-
-<footer className="relative z-10 p-6">
-
-
-<div className="flex gap-3 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 p-4">
+<div className="
+rounded-[35px]
+border
+border-white/20
+bg-white/10
+backdrop-blur-2xl
+p-4
+flex
+gap-3
+">
 
 
 <textarea
@@ -436,9 +537,14 @@ value={message}
 
 onChange={(e)=>setMessage(e.target.value)}
 
-placeholder="What's on your mind?"
+placeholder="Share a thought with Flux..."
 
-className="flex-1 bg-transparent outline-none resize-none"
+className="
+flex-1
+bg-transparent
+outline-none
+resize-none
+"
 
 />
 
@@ -449,13 +555,67 @@ onClick={sendMessage}
 
 disabled={loading}
 
-className="rounded-2xl bg-white text-black px-6 font-bold"
+className="
+rounded-3xl
+px-7
+bg-white
+text-black
+font-bold
+"
 
 >
 
-Enter Flux
+Connect
 
 </button>
+
+
+</div>
+
+
+
+<div className="
+grid
+grid-cols-2
+gap-4
+mt-5
+">
+
+
+<Link href="/outline">
+
+<div className="
+rounded-3xl
+bg-white/10
+border
+border-white/20
+p-5
+text-center
+">
+
+Outline
+
+</div>
+
+</Link>
+
+
+<Link href="/timeline">
+
+<div className="
+rounded-3xl
+bg-white/10
+border
+border-white/20
+p-5
+text-center
+">
+
+Timeline
+
+</div>
+
+</Link>
 
 
 </div>
@@ -464,7 +624,9 @@ Enter Flux
 </footer>
 
 
+
 </main>
 
-  );
+);
+
 }
