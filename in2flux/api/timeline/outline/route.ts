@@ -43,18 +43,21 @@ export async function GET() {
         text.includes("business")
       ) {
         categories.Startup.push(memory.content);
+
       } else if (
         text.includes("goal") ||
         text.includes("future") ||
         text.includes("plan")
       ) {
         categories.Goals.push(memory.content);
+
       } else if (
         text.includes("idea") ||
         text.includes("feature") ||
         text.includes("design")
       ) {
         categories.Ideas.push(memory.content);
+
       } else if (
         text.includes("family") ||
         text.includes("friend") ||
@@ -62,12 +65,14 @@ export async function GET() {
         text.includes("life")
       ) {
         categories.Personal.push(memory.content);
+
       } else {
         categories.Other.push(memory.content);
       }
     });
 
     return NextResponse.json(categories);
+
   } catch (error) {
     console.error(error);
 

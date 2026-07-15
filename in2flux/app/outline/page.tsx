@@ -1,132 +1,236 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const nodes = [
-  "Vision",
-  "Goals",
-  "Ideas",
-  "Projects",
-  "Skills",
-  "Growth",
-];
+type OutlineData = {
+  Startup: string[];
+  Goals: string[];
+  Ideas: string[];
+  Personal: string[];
+  Other: string[];
+};
 
 export default function OutlinePage() {
 
-return (
+  const [outline, setOutline] = useState<OutlineData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-<main className="relative min-h-screen overflow-hidden bg-black text-white">
 
+  useEffect(() => {
 
-{/* Starfield */}
+    async function loadOutline() {
 
-<div className="absolute inset-0">
+      try {
 
-{Array.from({length:80}).map((_,i)=>(
+        const res = await fetch("/api/outline");
+        const data = await res.json();
 
-<motion.div
+        setOutline(data);
 
-key={i}
+      } catch(err){
 
-className="absolute h-1 w-1 rounded-full bg-white"
+        console.error(err);
 
-initial={{
-x:`${Math.random()*100}%`,
-y:`${Math.random()*100}%`,
-opacity:.3
-}}
+      } finally {
 
-animate={{
-opacity:[.3,1,.3]
-}}
+        setLoading(false);
 
-transition={{
-duration:3+Math.random()*5,
-repeat:Infinity
-}}
+      }
 
-/>
+    }
 
-))}
+    loadOutline();
 
-</div>
+  }, []);
 
 
 
-{/* Title */}
-
-<div className="relative z-10 text-center pt-10">
-
-<h1 className="text-5xl font-bold">
-Outline
-</h1>
-
-<p className="text-zinc-400 mt-3">
-The map of your mind
-</p>
-
-</div>
+  const icons = [
+    "Startup",
+    "Goals",
+    "Ideas",
+    "Personal",
+    "Other"
+  ];
 
 
 
-{/* Nodes */}
+  return (
 
-<div className="relative z-10 flex flex-wrap justify-center gap-8 mt-20 px-8">
-
-
-{nodes.map((node,index)=>(
-
-<motion.div
-
-key={node}
-
-initial={{
-opacity:0,
-scale:.5
-}}
-
-animate={{
-opacity:1,
-scale:1,
-y:[0,-10,0]
-}}
-
-transition={{
-delay:index*.2,
-duration:3,
-repeat:Infinity
-}}
-
-className="
-h-32
-w-32
-rounded-full
-flex
-items-center
-justify-center
-text-center
-bg-white/10
-border
-border-purple-400/40
-backdrop-blur-xl
-shadow-lg
-"
-
->
-
-{node}
-
-</motion.div>
-
-))}
+    <main className="relative min-h-screen overflow-hidden bg-black text-white p-8">
 
 
-</div>
+      {/* Starfield */}
+
+      <div className="absolute inset-0">
+
+        {Array.from({length:90}).map((_,i)=>(
+
+          <div
+          key={i}
+          className="
+          absolute
+          h-1
+          w-1
+          rounded-full
+          bg-white
+          opacity-40
+          "
+          style={{
+            left:`${Math.random()*100}%`,
+            top:`${Math.random()*100}%`
+          }}
+          />
+
+        ))}
+
+      </div>
 
 
 
-</main>
+      <section className="relative z-10">
 
-);
+
+        <h1 className="
+        text-center
+        text-5xl
+        font-bold
+        ">
+          Outline
+        </h1>
+
+
+        <p className="
+        text-center
+        text-zinc-400
+        mt-3
+        ">
+          The map of your mind through Flux
+        </p>
+
+
+
+        {loading && (
+
+          <p className="text-center mt-20 text-zinc-400">
+            Mapping memories...
+          </p>
+
+        )}
+
+
+
+        {outline && (
+
+        <div className="
+        flex
+        flex-wrap
+        justify-center
+        gap-10
+        mt-20
+        ">
+
+
+        {icons.map((category,index)=>{
+
+
+          const memories =
+          outline[category as keyof OutlineData];
+
+
+          if(!memories || memories.length===0)
+          return null;
+
+
+
+          return (
+
+          <motion.div
+
+          key={category}
+
+          initial={{
+            opacity:0,
+            scale:.5
+          }}
+
+          animate={{
+            opacity:1,
+            scale:1
+          }}
+
+          transition={{
+            delay:index*.15
+          }}
+
+          className="
+          w-64
+          min-h-48
+          rounded-3xl
+          border
+          border-purple-400/40
+          bg-white/10
+          backdrop-blur-xl
+          p-6
+          shadow-lg
+          "
+
+          >
+
+
+            <h2 className="
+            text-xl
+            font-bold
+            text-purple-300
+            mb-4
+            text-center
+            ">
+              {category}
+            </h2>
+
+
+            <div className="space-y-3">
+
+
+            {memories.slice(0,3).map((memory,i)=>(
+
+              <p
+              key={i}
+              className="
+              text-sm
+              text-zinc-300
+              "
+              >
+                • {memory}
+              </p>
+
+            ))}
+
+
+            </div>
+
+
+          </motion.div>
+
+
+          );
+
+
+        })}
+
+
+        </div>
+
+        )}
+
+
+
+      </section>
+
+
+    </main>
+
+  );
 
 }
