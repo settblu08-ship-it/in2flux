@@ -2,51 +2,81 @@
 
 import { useState } from "react";
 
+const TWITTER_URL = "https://x.com/bananagodcoin?s=11";
+const TELEGRAM_URL = "https://t.me/+chVKxdDU2bpjN2Qx";
+
+// These will be added immediately after launch.
+const PUMP_FUN_URL = "";
+const CONTRACT_ADDRESS = "";
+
 export default function Home() {
   const [copied, setCopied] = useState(false);
 
-  const twitterLink = "https://x.com/bananagodcoin?s=11";
-  const telegramLink = "https://t.me/+chVKxdDU2bpjN2Qx";
+  async function copyContract() {
+    if (!CONTRACT_ADDRESS) return;
 
-  // Add these after Banana God launches
-  const pumpFunLink = "";
-  const contractAddress = "";
+    try {
+      await navigator.clipboard.writeText(CONTRACT_ADDRESS);
+      setCopied(true);
 
-  const copyContract = async () => {
-    if (!contractAddress) return;
-
-    await navigator.clipboard.writeText(contractAddress);
-    setCopied(true);
-
-    setTimeout(() => {
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch {
       setCopied(false);
-    }, 2000);
-  };
+    }
+  }
 
   return (
-    <main className="min-h-screen overflow-hidden bg-black text-white">
-      {/* Background */}
-      <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-yellow-950/40 via-black to-black" />
+    <main className="relative min-h-screen overflow-hidden bg-[#050505] text-white">
 
-        <div className="absolute left-1/2 top-20 h-96 w-96 -translate-x-1/2 rounded-full bg-yellow-500/10 blur-[120px]" />
+      {/* =========================================================
+          AMBIENT BACKGROUND
+      ========================================================= */}
 
-        <div className="absolute left-10 top-1/3 h-64 w-64 rounded-full bg-orange-500/10 blur-[100px]" />
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
 
-        <div className="absolute bottom-10 right-10 h-72 w-72 rounded-full bg-yellow-400/10 blur-[120px]" />
+        <div className="absolute left-1/2 top-[-260px] h-[650px] w-[650px] -translate-x-1/2 rounded-full bg-yellow-400/[0.08] blur-[150px]" />
+
+        <div className="absolute -left-48 top-[35%] h-[500px] w-[500px] rounded-full bg-orange-500/[0.06] blur-[140px]" />
+
+        <div className="absolute -right-48 top-[60%] h-[550px] w-[550px] rounded-full bg-yellow-300/[0.05] blur-[150px]" />
+
+        <div className="absolute inset-0 opacity-[0.035] [background-image:linear-gradient(rgba(255,255,255,.5)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.5)_1px,transparent_1px)] [background-size:80px_80px]" />
+
       </div>
 
-      {/* Navigation */}
-      <nav className="fixed left-0 right-0 top-0 z-50 border-b border-yellow-400/10 bg-black/70 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🍌</span>
-            <span className="font-black tracking-wide text-yellow-400">
-              BANANA GOD
-            </span>
-          </div>
 
-          <div className="hidden items-center gap-6 text-sm font-medium md:flex">
+      {/* =========================================================
+          NAVIGATION
+      ========================================================= */}
+
+      <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/[0.06] bg-black/60 backdrop-blur-2xl">
+
+        <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8">
+
+          <a
+            href="#top"
+            className="flex items-center gap-3"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-yellow-400/20 bg-yellow-400/10 text-2xl shadow-[0_0_30px_rgba(250,204,21,0.08)]">
+              🍌
+            </div>
+
+            <div>
+              <div className="text-sm font-black tracking-[0.18em] text-yellow-400">
+                BANANA GOD
+              </div>
+
+              <div className="text-[9px] font-bold tracking-[0.3em] text-white/30">
+                $BGOD
+              </div>
+            </div>
+          </a>
+
+
+          <nav className="hidden items-center gap-8 text-sm font-semibold text-white/60 md:flex">
+
             <a
               href="#about"
               className="transition hover:text-yellow-400"
@@ -69,301 +99,573 @@ export default function Home() {
             </a>
 
             <a
-              href={telegramLink}
+              href={TWITTER_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full bg-yellow-400 px-5 py-2 font-bold text-black transition hover:scale-105"
+              className="transition hover:text-yellow-400"
             >
-              Telegram
+              X
             </a>
-          </div>
-        </div>
-      </nav>
 
-      {/* Hero */}
-      <section className="flex min-h-screen flex-col items-center justify-center px-6 pt-24 text-center">
-        <div className="mb-6 animate-pulse text-7xl md:text-9xl">
-          🍌
-        </div>
+          </nav>
 
-        <p className="mb-4 text-sm font-bold uppercase tracking-[0.35em] text-yellow-400">
-          The Chosen Banana
-        </p>
-
-        <h1 className="text-6xl font-black tracking-tight text-yellow-400 md:text-8xl">
-          BANANA GOD
-        </h1>
-
-        <p className="mt-3 text-2xl font-bold text-white md:text-3xl">
-          $BGOD
-        </p>
-
-        <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-gray-300 md:text-xl">
-          The jungle has a ruler.
-          <br />
-          The banana has spoken.
-          <br />
-          <span className="font-bold text-yellow-400">
-            All hail Banana God.
-          </span>
-        </p>
-
-        <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-          {pumpFunLink ? (
-            <a
-              href={pumpFunLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-yellow-400 px-8 py-4 font-black text-black shadow-lg shadow-yellow-400/20 transition hover:scale-105"
-            >
-              🍌 BUY $BGOD
-            </a>
-          ) : (
-            <button
-              disabled
-              className="cursor-not-allowed rounded-full bg-yellow-400/30 px-8 py-4 font-black text-yellow-200"
-            >
-              🍌 LAUNCHING SOON
-            </button>
-          )}
 
           <a
-            href={telegramLink}
+            href={TELEGRAM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-yellow-400/50 bg-yellow-400/5 px-8 py-4 font-black text-yellow-400 transition hover:bg-yellow-400 hover:text-black"
+            className="rounded-full bg-yellow-400 px-5 py-2.5 text-xs font-black text-black shadow-[0_0_25px_rgba(250,204,21,0.15)] transition duration-300 hover:scale-105 hover:bg-yellow-300"
           >
-            💬 JOIN TELEGRAM
+            JOIN THE JUNGLE
           </a>
 
-          <a
-            href={twitterLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full border border-white/20 px-8 py-4 font-black transition hover:border-white hover:bg-white hover:text-black"
-          >
-            𝕏 FOLLOW US
-          </a>
         </div>
-      </section>
 
-      {/* About */}
+      </header>
+
+
+      {/* =========================================================
+          HERO
+      ========================================================= */}
+
       <section
-        id="about"
-        className="mx-auto max-w-5xl px-6 py-24 text-center"
+        id="top"
+        className="relative z-10 flex min-h-screen items-center justify-center px-6 pb-20 pt-32"
       >
-        <p className="mb-3 text-sm font-bold uppercase tracking-[0.3em] text-yellow-400">
-          The Legend
-        </p>
 
-        <h2 className="text-4xl font-black md:text-6xl">
-          WHY BANANA GOD?
-        </h2>
+        <div className="mx-auto w-full max-w-6xl text-center">
 
-        <p className="mx-auto mt-7 max-w-3xl text-lg leading-8 text-gray-400">
-          Banana God is a community-driven meme coin built on Solana.
-          No complicated story. No boring corporate presentation.
-          Just bananas, memes, community, and a jungle looking for its king.
-        </p>
+          <div className="mb-8 flex justify-center">
 
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
-          <div className="rounded-3xl border border-yellow-400/10 bg-white/[0.03] p-8 backdrop-blur">
-            <div className="text-4xl">🍌</div>
-            <h3 className="mt-4 text-xl font-bold">THE MEME</h3>
-            <p className="mt-3 text-gray-400">
-              One banana. One god. Infinite memes.
-            </p>
-          </div>
+            <div className="relative">
 
-          <div className="rounded-3xl border border-yellow-400/10 bg-white/[0.03] p-8 backdrop-blur">
-            <div className="text-4xl">🌴</div>
-            <h3 className="mt-4 text-xl font-bold">THE JUNGLE</h3>
-            <p className="mt-3 text-gray-400">
-              A community growing one believer at a time.
-            </p>
-          </div>
+              <div className="absolute inset-0 rounded-full bg-yellow-400/20 blur-[70px]" />
 
-          <div className="rounded-3xl border border-yellow-400/10 bg-white/[0.03] p-8 backdrop-blur">
-            <div className="text-4xl">👑</div>
-            <h3 className="mt-4 text-xl font-bold">THE GOD</h3>
-            <p className="mt-3 text-gray-400">
-              There can only be one ruler of the jungle.
-            </p>
-          </div>
-        </div>
-      </section>
+              <div className="relative flex h-36 w-36 items-center justify-center rounded-full border border-yellow-400/20 bg-gradient-to-b from-yellow-400/10 to-transparent shadow-[0_0_80px_rgba(250,204,21,0.08)] sm:h-44 sm:w-44">
 
-      {/* Token */}
-      <section
-        id="token"
-        className="mx-auto max-w-5xl px-6 py-24"
-      >
-        <div className="rounded-[2rem] border border-yellow-400/10 bg-white/[0.03] p-8 md:p-12">
-          <div className="text-center">
-            <p className="text-sm font-bold uppercase tracking-[0.3em] text-yellow-400">
-              Token
-            </p>
+                <div className="animate-pulse text-8xl sm:text-9xl">
+                  🍌
+                </div>
 
-            <h2 className="mt-3 text-4xl font-black md:text-6xl">
-              $BGOD
-            </h2>
-          </div>
-
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl bg-black/50 p-6 text-center">
-              <p className="text-sm text-gray-500">TICKER</p>
-              <p className="mt-2 text-xl font-black text-yellow-400">
-                $BGOD
-              </p>
-            </div>
-
-            <div className="rounded-2xl bg-black/50 p-6 text-center">
-              <p className="text-sm text-gray-500">CHAIN</p>
-              <p className="mt-2 text-xl font-black">SOLANA</p>
-            </div>
-
-            <div className="rounded-2xl bg-black/50 p-6 text-center">
-              <p className="text-sm text-gray-500">STATUS</p>
-              <p className="mt-2 text-xl font-black text-yellow-400">
-                PRE-LAUNCH
-              </p>
-            </div>
-          </div>
-
-          {/* Contract */}
-          <div className="mt-6 rounded-2xl bg-black/50 p-6">
-            <p className="text-center text-sm text-gray-500">
-              CONTRACT ADDRESS
-            </p>
-
-            <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-              <div className="flex-1 overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-center text-sm text-gray-500">
-                {contractAddress || "Contract address will appear after launch"}
               </div>
 
-              <button
-                onClick={copyContract}
-                disabled={!contractAddress}
-                className="rounded-xl bg-yellow-400 px-5 py-3 font-bold text-black disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                {copied ? "COPIED!" : "COPY"}
-              </button>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Roadmap */}
-      <section
-        id="roadmap"
-        className="mx-auto max-w-5xl px-6 py-24"
-      >
-        <div className="text-center">
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-yellow-400">
-            The Journey
+          </div>
+
+
+          <div className="mb-5 text-xs font-black uppercase tracking-[0.45em] text-yellow-400/70">
+            THE CHOSEN BANANA
+          </div>
+
+
+          <h1 className="mx-auto max-w-5xl text-6xl font-black leading-[0.9] tracking-[-0.05em] sm:text-8xl md:text-[9rem]">
+
+            <span className="bg-gradient-to-b from-yellow-200 via-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+              BANANA
+            </span>
+
+            <br />
+
+            <span className="text-white">
+              GOD
+            </span>
+
+          </h1>
+
+
+          <div className="mt-6 text-xl font-black tracking-[0.3em] text-yellow-400 sm:text-2xl">
+            $BGOD
+          </div>
+
+
+          <p className="mx-auto mt-7 max-w-2xl text-base leading-7 text-white/50 sm:text-lg sm:leading-8">
+            The jungle has a ruler.
+            <br />
+            The banana has spoken.
+            <br />
+            <span className="font-bold text-white/80">
+              All hail Banana God.
+            </span>
           </p>
 
-          <h2 className="mt-3 text-4xl font-black md:text-6xl">
-            ROADMAP
-          </h2>
-        </div>
 
-        <div className="mt-12 space-y-5">
-          <div className="rounded-3xl border border-yellow-400/20 bg-yellow-400/5 p-7">
-            <p className="text-sm font-bold text-yellow-400">
-              PHASE 01
-            </p>
+          {/* HERO BUTTONS */}
 
-            <h3 className="mt-2 text-2xl font-black">
-              THE AWAKENING
-            </h3>
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
 
-            <p className="mt-3 text-gray-400">
-              Launch Banana God. Build the community. Spread the first
-              wave of banana memes.
-            </p>
-          </div>
+            {PUMP_FUN_URL ? (
+              <a
+                href={PUMP_FUN_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex min-w-[190px] items-center justify-center gap-2 rounded-full bg-yellow-400 px-7 py-4 text-sm font-black text-black shadow-[0_0_40px_rgba(250,204,21,0.18)] transition duration-300 hover:scale-105 hover:bg-yellow-300"
+              >
+                🍌 BUY $BGOD
+              </a>
+            ) : (
+              <div className="flex min-w-[190px] cursor-default items-center justify-center gap-2 rounded-full border border-yellow-400/20 bg-yellow-400/[0.06] px-7 py-4 text-sm font-black text-yellow-400/60">
+                🍌 LAUNCHING SOON
+              </div>
+            )}
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-7">
-            <p className="text-sm font-bold text-yellow-400">
-              PHASE 02
-            </p>
 
-            <h3 className="mt-2 text-2xl font-black">
-              THE JUNGLE GROWS
-            </h3>
-
-            <p className="mt-3 text-gray-400">
-              Community events, meme contests, raids, collaborations,
-              and expansion across the crypto jungle.
-            </p>
-          </div>
-
-          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-7">
-            <p className="text-sm font-bold text-yellow-400">
-              PHASE 03
-            </p>
-
-            <h3 className="mt-2 text-2xl font-black">
-              BANANA EMPIRE
-            </h3>
-
-            <p className="mt-3 text-gray-400">
-              Continue building the Banana God community and expand the
-              ecosystem with the community.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Community */}
-      <section className="px-6 py-24 text-center">
-        <div className="mx-auto max-w-4xl rounded-[2rem] border border-yellow-400/20 bg-gradient-to-b from-yellow-400/10 to-transparent p-10 md:p-16">
-          <div className="text-6xl">🍌</div>
-
-          <h2 className="mt-6 text-4xl font-black md:text-6xl">
-            JOIN THE JUNGLE
-          </h2>
-
-          <p className="mx-auto mt-5 max-w-xl text-gray-400">
-            The community is where Banana God lives.
-            Come early. Bring memes.
-          </p>
-
-          <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
             <a
-              href={telegramLink}
+              href={TELEGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full bg-yellow-400 px-8 py-4 font-black text-black transition hover:scale-105"
+              className="flex min-w-[190px] items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-7 py-4 text-sm font-black text-white transition duration-300 hover:border-yellow-400/30 hover:bg-yellow-400/[0.08] hover:text-yellow-400"
             >
               💬 TELEGRAM
             </a>
 
+
             <a
-              href={twitterLink}
+              href={TWITTER_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-white/20 px-8 py-4 font-black transition hover:bg-white hover:text-black"
+              className="flex min-w-[190px] items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-7 py-4 text-sm font-black text-white transition duration-300 hover:border-white/30 hover:bg-white/[0.08]"
             >
-              𝕏 TWITTER
+              𝕏 FOLLOW ON X
             </a>
+
           </div>
+
+
+          {/* STATUS */}
+
+          <div className="mx-auto mt-14 flex w-fit items-center gap-3 rounded-full border border-white/[0.06] bg-white/[0.025] px-5 py-3 text-xs text-white/40">
+
+            <span className="h-2 w-2 animate-pulse rounded-full bg-yellow-400" />
+
+            BANANA GOD IS AWAKENING
+
+          </div>
+
         </div>
+
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-white/10 px-6 py-10 text-center">
-        <div className="text-3xl">🍌</div>
 
-        <p className="mt-3 font-black tracking-widest text-yellow-400">
-          ALL HAIL BANANA GOD
-        </p>
+      {/* =========================================================
+          ABOUT
+      ========================================================= */}
 
-        <p className="mt-3 text-sm text-gray-600">
-          $BGOD • SOLANA
-        </p>
+      <section
+        id="about"
+        className="relative z-10 px-6 py-32"
+      >
+
+        <div className="mx-auto max-w-6xl">
+
+          <div className="mx-auto max-w-3xl text-center">
+
+            <div className="text-xs font-black uppercase tracking-[0.4em] text-yellow-400">
+              THE LEGEND
+            </div>
+
+            <h2 className="mt-5 text-4xl font-black tracking-tight sm:text-6xl">
+              WHY BANANA GOD?
+            </h2>
+
+            <p className="mt-7 text-base leading-8 text-white/45 sm:text-lg">
+              Banana God is a community-driven meme coin built on Solana.
+              There is no complicated mythology to memorize and no corporate
+              boardroom behind the banana.
+            </p>
+
+            <p className="mt-5 text-base leading-8 text-white/45 sm:text-lg">
+              Just memes, community, chaos, and a jungle looking for its king.
+            </p>
+
+          </div>
+
+
+          <div className="mt-16 grid gap-5 md:grid-cols-3">
+
+            {[
+              {
+                icon: "🍌",
+                title: "THE MEME",
+                text: "One banana. One god. Infinite possibilities.",
+              },
+              {
+                icon: "🌴",
+                title: "THE JUNGLE",
+                text: "A community growing one believer at a time.",
+              },
+              {
+                icon: "👑",
+                title: "THE GOD",
+                text: "There can only be one ruler of the jungle.",
+              },
+            ].map((item) => (
+
+              <div
+                key={item.title}
+                className="group rounded-3xl border border-white/[0.07] bg-white/[0.025] p-8 text-center backdrop-blur-xl transition duration-500 hover:-translate-y-2 hover:border-yellow-400/20 hover:bg-yellow-400/[0.035]"
+              >
+
+                <div className="text-5xl transition duration-500 group-hover:scale-110">
+                  {item.icon}
+                </div>
+
+                <h3 className="mt-6 text-lg font-black tracking-[0.15em]">
+                  {item.title}
+                </h3>
+
+                <p className="mt-4 text-sm leading-7 text-white/40">
+                  {item.text}
+                </p>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* =========================================================
+          TOKEN
+      ========================================================= */}
+
+      <section
+        id="token"
+        className="relative z-10 px-6 py-32"
+      >
+
+        <div className="mx-auto max-w-6xl">
+
+          <div className="text-center">
+
+            <div className="text-xs font-black uppercase tracking-[0.4em] text-yellow-400">
+              THE TOKEN
+            </div>
+
+            <h2 className="mt-5 text-4xl font-black sm:text-6xl">
+              $BGOD
+            </h2>
+
+            <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-white/40">
+              Everything you need to know about the Banana God token.
+            </p>
+
+          </div>
+
+
+          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+            {[
+              ["TICKER", "$BGOD"],
+              ["CHAIN", "SOLANA"],
+              ["LAUNCH", "PUMP.FUN"],
+              ["STATUS", "PRE-LAUNCH"],
+            ].map(([label, value]) => (
+
+              <div
+                key={label}
+                className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-7 text-center"
+              >
+
+                <div className="text-[10px] font-black tracking-[0.3em] text-white/30">
+                  {label}
+                </div>
+
+                <div className="mt-3 text-lg font-black text-yellow-400">
+                  {value}
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+
+          {/* CONTRACT */}
+
+          <div className="mt-5 rounded-3xl border border-white/[0.07] bg-white/[0.025] p-6 sm:p-8">
+
+            <div className="text-center">
+
+              <div className="text-[10px] font-black tracking-[0.3em] text-white/30">
+                CONTRACT ADDRESS
+              </div>
+
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+
+                <div className="flex min-h-[52px] flex-1 items-center justify-center overflow-hidden rounded-xl border border-white/[0.06] bg-black/40 px-4 text-xs text-white/30 sm:justify-start">
+                  {CONTRACT_ADDRESS
+                    ? CONTRACT_ADDRESS
+                    : "Contract address will appear after launch"}
+                </div>
+
+                <button
+                  onClick={copyContract}
+                  disabled={!CONTRACT_ADDRESS}
+                  className="min-h-[52px] rounded-xl bg-yellow-400 px-7 text-xs font-black text-black transition hover:bg-yellow-300 disabled:cursor-not-allowed disabled:opacity-30"
+                >
+                  {copied ? "COPIED ✓" : "COPY ADDRESS"}
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* =========================================================
+          ROADMAP
+      ========================================================= */}
+
+      <section
+        id="roadmap"
+        className="relative z-10 px-6 py-32"
+      >
+
+        <div className="mx-auto max-w-6xl">
+
+          <div className="text-center">
+
+            <div className="text-xs font-black uppercase tracking-[0.4em] text-yellow-400">
+              THE JOURNEY
+            </div>
+
+            <h2 className="mt-5 text-4xl font-black sm:text-6xl">
+              ROADMAP
+            </h2>
+
+          </div>
+
+
+          <div className="mx-auto mt-16 max-w-4xl">
+
+            <div className="space-y-5">
+
+              <RoadmapCard
+                number="01"
+                title="THE AWAKENING"
+                description="Launch Banana God. Establish the community. Spread the first wave of banana memes."
+                active
+              />
+
+              <RoadmapCard
+                number="02"
+                title="THE JUNGLE GROWS"
+                description="Community events, meme contests, raids, collaborations, and expansion across the crypto jungle."
+              />
+
+              <RoadmapCard
+                number="03"
+                title="THE BANANA EMPIRE"
+                description="Continue building the Banana God community and explore new ways for the jungle to grow together."
+              />
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* =========================================================
+          COMMUNITY
+      ========================================================= */}
+
+      <section className="relative z-10 px-6 py-32">
+
+        <div className="mx-auto max-w-5xl">
+
+          <div className="relative overflow-hidden rounded-[2.5rem] border border-yellow-400/15 bg-gradient-to-b from-yellow-400/[0.08] to-transparent px-6 py-20 text-center sm:px-12">
+
+            <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-yellow-400/10 blur-[100px]" />
+
+            <div className="relative">
+
+              <div className="text-7xl">
+                🍌
+              </div>
+
+              <div className="mt-7 text-xs font-black uppercase tracking-[0.4em] text-yellow-400">
+                THE JUNGLE IS OPEN
+              </div>
+
+              <h2 className="mt-5 text-4xl font-black sm:text-6xl">
+                JOIN THE COMMUNITY
+              </h2>
+
+              <p className="mx-auto mt-6 max-w-xl text-sm leading-7 text-white/40 sm:text-base">
+                Banana God is built around its community.
+                Join the conversation, bring your memes, and enter the jungle.
+              </p>
+
+
+              <div className="mt-9 flex flex-col justify-center gap-4 sm:flex-row">
+
+                <a
+                  href={TELEGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-yellow-400 px-9 py-4 text-sm font-black text-black shadow-[0_0_40px_rgba(250,204,21,0.15)] transition duration-300 hover:scale-105 hover:bg-yellow-300"
+                >
+                  💬 JOIN TELEGRAM
+                </a>
+
+                <a
+                  href={TWITTER_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-white/10 bg-white/[0.04] px-9 py-4 text-sm font-black transition duration-300 hover:border-white/30 hover:bg-white/[0.08]"
+                >
+                  𝕏 FOLLOW ON X
+                </a>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* =========================================================
+          FOOTER
+      ========================================================= */}
+
+      <footer className="relative z-10 border-t border-white/[0.06] px-6 py-12">
+
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 text-center sm:flex-row sm:text-left">
+
+          <div>
+
+            <div className="flex items-center justify-center gap-3 sm:justify-start">
+
+              <div className="text-3xl">
+                🍌
+              </div>
+
+              <div>
+
+                <div className="text-sm font-black tracking-[0.2em] text-yellow-400">
+                  BANANA GOD
+                </div>
+
+                <div className="mt-1 text-[9px] font-bold tracking-[0.3em] text-white/25">
+                  $BGOD • SOLANA
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div className="text-xs text-white/25">
+            All hail Banana God.
+          </div>
+
+
+          <div className="flex gap-5 text-xs font-bold text-white/40">
+
+            <a
+              href={TWITTER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition hover:text-yellow-400"
+            >
+              X
+            </a>
+
+            <a
+              href={TELEGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition hover:text-yellow-400"
+            >
+              Telegram
+            </a>
+
+          </div>
+
+        </div>
+
       </footer>
+
     </main>
+  );
+}
+
+
+/* =============================================================
+   ROADMAP COMPONENT
+============================================================= */
+
+function RoadmapCard({
+  number,
+  title,
+  description,
+  active = false,
+}: {
+  number: string;
+  title: string;
+  description: string;
+  active?: boolean;
+}) {
+  return (
+    <div
+      className={`group relative overflow-hidden rounded-3xl border p-7 transition duration-500 sm:p-9 ${
+        active
+          ? "border-yellow-400/20 bg-yellow-400/[0.045]"
+          : "border-white/[0.07] bg-white/[0.025] hover:border-yellow-400/15"
+      }`}
+    >
+
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+
+        <div
+          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-sm font-black ${
+            active
+              ? "bg-yellow-400 text-black"
+              : "border border-white/10 bg-white/[0.04] text-yellow-400"
+          }`}
+        >
+          {number}
+        </div>
+
+
+        <div>
+
+          <div className="text-xs font-black tracking-[0.25em] text-yellow-400">
+            PHASE {number}
+          </div>
+
+          <h3 className="mt-2 text-2xl font-black">
+            {title}
+          </h3>
+
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-white/40">
+            {description}
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
   );
 }
