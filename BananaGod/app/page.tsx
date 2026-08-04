@@ -5,19 +5,27 @@ import { useEffect, useState } from "react";
 const TWITTER_URL = "https://x.com/bananagodcoin?s=11";
 const TELEGRAM_URL = "https://t.me/+chVKxdDU2bpjN2Qx";
 
-// Add these after the coin launches.
-const PUMP_FUN_URL = "";
+/*
+  ADD THESE AFTER THE COIN LAUNCHES.
+*/
+const PUMP_URL = "";
 const CONTRACT_ADDRESS = "";
 
 export default function Home() {
+  const [scrolled, setScrolled] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 30);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const copyContract = async () => {
+  async function copyContract() {
     if (!CONTRACT_ADDRESS) return;
 
     try {
@@ -28,360 +36,337 @@ export default function Home() {
         setCopied(false);
       }, 2000);
     } catch {
-      setCopied(false);
+      console.log("Could not copy contract");
     }
-  };
+  }
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden bg-[#030303] text-white">
+    <main className="site-shell">
 
-      {/* =========================================================
-          ANIMATED BACKGROUND
-      ========================================================= */}
+      {/* =====================================================
+          BACKGROUND ATMOSPHERE
+      ===================================================== */}
 
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+      <div className="ambient-background">
+        <div className="ambient-orb orb-one" />
+        <div className="ambient-orb orb-two" />
+        <div className="ambient-orb orb-three" />
 
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(250,204,21,0.13),transparent_35%),radial-gradient(circle_at_20%_80%,rgba(234,88,12,0.08),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(250,204,21,0.07),transparent_30%)]" />
-
-        <div
-          className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow-400/10 blur-[140px]"
-          style={{
-            animation: "pulseGlow 7s ease-in-out infinite",
-          }}
-        />
-
-        <div
-          className="absolute -left-40 top-[20%] h-[350px] w-[350px] rounded-full bg-orange-500/10 blur-[120px]"
-          style={{
-            animation: "driftOne 14s ease-in-out infinite",
-          }}
-        />
-
-        <div
-          className="absolute -right-40 bottom-[10%] h-[450px] w-[450px] rounded-full bg-yellow-500/10 blur-[140px]"
-          style={{
-            animation: "driftTwo 17s ease-in-out infinite",
-          }}
-        />
-
-        <div className="absolute inset-0 opacity-[0.025] bg-[linear-gradient(rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.8)_1px,transparent_1px)] bg-[size:70px_70px]" />
-
-        {mounted &&
-          Array.from({ length: 28 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute h-1 w-1 rounded-full bg-yellow-300/50"
-              style={{
-                left: `${(i * 37) % 100}%`,
-                top: `${(i * 61) % 100}%`,
-                animation: `particleFloat ${
-                  5 + (i % 5)
-                }s ease-in-out infinite`,
-                animationDelay: `${(i % 7) * 0.6}s`,
-              }}
-            />
-          ))}
+        <div className="gold-dust dust-one" />
+        <div className="gold-dust dust-two" />
+        <div className="gold-dust dust-three" />
+        <div className="gold-dust dust-four" />
+        <div className="gold-dust dust-five" />
       </div>
 
 
-      {/* =========================================================
+      {/* =====================================================
           NAVIGATION
-      ========================================================= */}
+      ===================================================== */}
 
-      <header className="fixed left-0 right-0 top-0 z-50">
+      <header className={`navbar ${scrolled ? "navbar-scrolled" : ""}`}>
 
-        <div className="mx-auto mt-4 flex max-w-6xl items-center justify-between px-5">
+        <a href="#home" className="brand">
 
-          <a
-            href="#top"
-            className="group flex items-center gap-3 rounded-full border border-white/10 bg-black/50 px-4 py-2 backdrop-blur-xl transition hover:border-yellow-400/30"
-          >
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-yellow-400/10 text-xl transition group-hover:scale-110">
-              🍌
-            </div>
-
-            <div>
-              <div className="text-xs font-black tracking-[0.2em] text-yellow-400">
-                BANANA GOD
-              </div>
-
-              <div className="text-[8px] tracking-[0.35em] text-white/30">
-                $BGOD
-              </div>
-            </div>
-          </a>
-
-
-          <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-black/50 p-1.5 backdrop-blur-xl md:flex">
-
-            <a
-              href="#about"
-              className="rounded-full px-5 py-2 text-xs font-bold text-white/50 transition hover:bg-white/5 hover:text-white"
-            >
-              ABOUT
-            </a>
-
-            <a
-              href="#token"
-              className="rounded-full px-5 py-2 text-xs font-bold text-white/50 transition hover:bg-white/5 hover:text-white"
-            >
-              TOKEN
-            </a>
-
-            <a
-              href="#roadmap"
-              className="rounded-full px-5 py-2 text-xs font-bold text-white/50 transition hover:bg-white/5 hover:text-white"
-            >
-              ROADMAP
-            </a>
-
+          <div className="brand-banana">
+            🍌
           </div>
 
+          <div>
+            <div className="brand-name">
+              BANANA GOD
+            </div>
+
+            <div className="brand-symbol">
+              $BGOD
+            </div>
+          </div>
+
+        </a>
+
+
+        <nav className="desktop-nav">
 
           <a
-            href={TELEGRAM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group rounded-full border border-yellow-400/30 bg-yellow-400/10 px-5 py-3 text-[10px] font-black tracking-wider text-yellow-400 backdrop-blur-xl transition hover:scale-105 hover:bg-yellow-400 hover:text-black"
+            href="#home"
+            className="active"
           >
-            JOIN THE JUNGLE →
+            HOME
           </a>
+
+          <a href="#about">
+            ABOUT
+          </a>
+
+          <a href="#tokenomics">
+            TOKENOMICS
+          </a>
+
+          <a href="#roadmap">
+            ROADMAP
+          </a>
+
+          <a href="#community">
+            COMMUNITY
+          </a>
+
+        </nav>
+
+
+        <div className="nav-actions">
+
+          {PUMP_URL ? (
+            <a
+              href={PUMP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="gold-button nav-buy"
+            >
+              BUY $BGOD
+            </a>
+          ) : (
+            <a
+              href="#tokenomics"
+              className="gold-button nav-buy"
+            >
+              BUY $BGOD
+            </a>
+          )}
 
         </div>
 
       </header>
 
 
-      {/* =========================================================
+      {/* =====================================================
           HERO
-      ========================================================= */}
+      ===================================================== */}
 
       <section
-        id="top"
-        className="relative z-10 flex min-h-screen items-center justify-center px-5 pb-20 pt-32"
+        id="home"
+        className="hero"
       >
 
-        <div className="mx-auto w-full max-w-6xl text-center">
+        <div className="hero-content">
 
-          <div className="relative mx-auto mb-10 h-[300px] w-[300px] sm:h-[380px] sm:w-[380px]">
-
-            {/* Outer glow */}
-
-            <div
-              className="absolute inset-0 rounded-full bg-yellow-400/10 blur-[90px]"
-              style={{
-                animation: "pulseGlow 5s ease-in-out infinite",
-              }}
-            />
-
-            {/* Outer orbital ring */}
-
-            <div
-              className="absolute inset-[10px] rounded-full border border-yellow-400/10"
-              style={{
-                animation: "spinSlow 22s linear infinite",
-              }}
-            />
-
-            <div
-              className="absolute inset-[35px] rounded-full border border-yellow-400/[0.08] border-dashed"
-              style={{
-                animation: "spinReverse 30s linear infinite",
-              }}
-            />
-
-            {/* Floating particles around banana */}
-
-            <div className="absolute left-[8%] top-[25%] text-xl opacity-50">
-              ✦
-            </div>
-
-            <div className="absolute right-[12%] top-[18%] text-sm text-yellow-300/60">
-              ✦
-            </div>
-
-            <div className="absolute bottom-[22%] left-[15%] text-sm text-yellow-300/40">
-              •
-            </div>
-
-            <div className="absolute bottom-[20%] right-[14%] text-xl text-yellow-300/50">
-              ✦
-            </div>
-
-            {/* Center */}
-
-            <div
-              className="absolute left-1/2 top-1/2 flex h-48 w-48 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-yellow-400/20 bg-gradient-to-b from-yellow-400/[0.12] to-black/40 shadow-[0_0_100px_rgba(250,204,21,0.12)] backdrop-blur-xl sm:h-60 sm:w-60"
-              style={{
-                animation: "heroFloat 5s ease-in-out infinite",
-              }}
-            >
-
-              <div className="absolute inset-3 rounded-full border border-white/[0.04]" />
-
-              <div className="relative text-[105px] drop-shadow-[0_0_30px_rgba(250,204,21,0.25)] sm:text-[135px]">
-                🍌
-              </div>
-
-            </div>
-
+          <div className="solana-pill">
+            <span className="solana-icon">≋</span>
+            ON SOLANA
           </div>
 
 
-          <div
-            className="mb-5 text-[10px] font-black uppercase tracking-[0.55em] text-yellow-400/60 sm:text-xs"
-            style={{
-              animation: "fadeUp 1s ease-out both",
-            }}
-          >
-            THE CHOSEN BANANA
-          </div>
+          <h1>
 
-
-          <h1
-            className="text-6xl font-black leading-[0.82] tracking-[-0.07em] sm:text-8xl md:text-[10rem]"
-            style={{
-              animation: "fadeUp 1s ease-out 0.15s both",
-            }}
-          >
-            <span className="bg-gradient-to-b from-yellow-100 via-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-              BANANA
+            <span className="gold-heading">
+              WORSHIP
             </span>
 
             <br />
 
-            <span className="text-white">
-              GOD
+            <span className="gold-heading">
+              THE BANANA.
             </span>
+
+            <br />
+
+            <span className="white-heading">
+              BUILD THE LEGEND.
+            </span>
+
           </h1>
 
 
-          <div
-            className="mt-7 text-lg font-black tracking-[0.45em] text-yellow-400 sm:text-2xl"
-            style={{
-              animation: "fadeUp 1s ease-out 0.3s both",
-            }}
-          >
-            $BGOD
-          </div>
-
-
-          <p
-            className="mx-auto mt-7 max-w-xl text-sm leading-7 text-white/40 sm:text-base"
-            style={{
-              animation: "fadeUp 1s ease-out 0.45s both",
-            }}
-          >
-            The jungle has a ruler.
-            <br />
-            The banana has spoken.
-            <br />
-            <span className="font-bold text-white/75">
-              All hail Banana God.
-            </span>
+          <p className="hero-description">
+            Banana God is a community-powered
+            meme coin on Solana, here to bring
+            good vibes, big memes, and divine
+            gains to the chosen ones.
           </p>
 
 
-          {/* =====================================================
-              FLOATING LINK BUBBLES
-          ===================================================== */}
+          <div className="hero-buttons">
 
-          <div
-            className="mx-auto mt-10 flex max-w-xl flex-wrap items-center justify-center gap-3"
-            style={{
-              animation: "fadeUp 1s ease-out 0.6s both",
-            }}
-          >
-
-            <SocialBubble
-              href={TWITTER_URL}
-              icon="𝕏"
-              label="X"
-              external
-            />
-
-            <SocialBubble
-              href={TELEGRAM_URL}
-              icon="✈"
-              label="TELEGRAM"
-              external
-            />
-
-            {PUMP_FUN_URL ? (
-              <SocialBubble
-                href={PUMP_FUN_URL}
-                icon="🍌"
-                label="BUY $BGOD"
-                external
-                primary
-              />
+            {PUMP_URL ? (
+              <a
+                href={PUMP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="gold-button large-button"
+              >
+                BUY $BGOD
+                <span>↗</span>
+              </a>
             ) : (
-              <div className="group flex cursor-default items-center gap-2 rounded-full border border-yellow-400/10 bg-yellow-400/[0.04] px-5 py-3 text-[10px] font-black tracking-wider text-yellow-400/40 backdrop-blur-xl">
-                🍌 LAUNCHING SOON
-              </div>
+              <a
+                href="#tokenomics"
+                className="gold-button large-button"
+              >
+                BUY $BGOD
+                <span>↗</span>
+              </a>
             )}
 
+
+            <a
+              href={TELEGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="outline-button large-button"
+            >
+              JOIN TELEGRAM
+              <span>↗</span>
+            </a>
+
           </div>
 
 
-          {/* STATUS */}
+          <div className="hero-features">
 
-          <div
-            className="mx-auto mt-9 flex w-fit items-center gap-3 rounded-full border border-white/[0.06] bg-white/[0.025] px-5 py-2.5 text-[9px] font-bold tracking-[0.2em] text-white/30 backdrop-blur-xl"
-            style={{
-              animation: "fadeUp 1s ease-out 0.75s both",
-            }}
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-yellow-400 opacity-60" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-yellow-400" />
-            </span>
+            <Feature
+              icon="♢"
+              title="FAIR LAUNCH"
+            />
 
-            BANANA GOD IS AWAKENING
+            <Feature
+              icon="♙"
+              title="100% COMMUNITY"
+              subtitle="OWNED"
+            />
+
+            <Feature
+              icon="≋"
+              title="BUILT ON"
+              subtitle="SOLANA"
+            />
+
           </div>
+
+        </div>
+
+
+        {/* HERO ART */}
+
+        <div className="hero-art">
+
+          <div className="hero-halo" />
+
+          <div className="temple-light light-left" />
+          <div className="temple-light light-right" />
+
+          <div className="hero-image">
+
+            <div className="hero-image-placeholder">
+
+              <div className="god-halo" />
+
+              <div className="god-banana">
+                🍌
+              </div>
+
+              <div className="god-throne">
+                ♛
+              </div>
+
+            </div>
+
+          </div>
+
+          <div className="hero-smoke smoke-one" />
+          <div className="hero-smoke smoke-two" />
 
         </div>
 
       </section>
 
 
-      {/* =========================================================
+      {/* =====================================================
+          STATS
+      ===================================================== */}
+
+      <section className="stats-section">
+
+        <div className="stats-card">
+
+          <Stat
+            value="0%"
+            label="TAX"
+          />
+
+          <Stat
+            value="100%"
+            label="LIQUIDITY LOCKED"
+          />
+
+          <Stat
+            value="COMMUNITY"
+            label="DRIVEN"
+          />
+
+          <Stat
+            value="NO DEV"
+            label="WALLET"
+          />
+
+        </div>
+
+      </section>
+
+
+      {/* =====================================================
           ABOUT
-      ========================================================= */}
+      ===================================================== */}
 
       <section
         id="about"
-        className="relative z-10 px-5 py-32"
+        className="about-section section"
       >
 
-        <div className="mx-auto max-w-6xl">
+        <div className="about-copy">
 
-          <SectionHeading
-            eyebrow="THE LEGEND"
-            title="WHY BANANA GOD?"
-            description="Not every banana is created equal."
-          />
+          <div className="eyebrow">
+            ★ &nbsp; ABOUT BANANA GOD
+          </div>
+
+          <h2>
+            NOT JUST A MEME.
+            <br />
+            <span>
+              A MOVEMENT.
+            </span>
+          </h2>
+
+          <p>
+            Banana God was born from the memes,
+            but built for the community. No insiders.
+            No dev wallet. Just believers, builders,
+            and banana warriors on a mission to
+            take over Solana.
+          </p>
+
+          <a
+            href="#community"
+            className="outline-button learn-button"
+          >
+            LEARN MORE
+            <span>↗</span>
+          </a>
+
+        </div>
 
 
-          <div className="mt-16 grid gap-5 md:grid-cols-3">
+        <div className="about-art">
 
-            <GlassCard
-              icon="🍌"
-              title="THE MEME"
-              text="One banana. One god. Infinite memes. The internet needed a ruler."
-            />
+          <div className="mountain-art">
 
-            <GlassCard
-              icon="🌴"
-              title="THE JUNGLE"
-              text="A community-powered jungle where believers, raiders, and meme creators come together."
-            />
+            <div className="mountain-sun" />
 
-            <GlassCard
-              icon="👑"
-              title="THE GOD"
-              text="There can only be one ruler. The banana has chosen."
-            />
+            <div className="mountain">
+              ▲
+            </div>
+
+            <div className="mountain-banana">
+              🍌
+            </div>
 
           </div>
 
@@ -390,77 +375,105 @@ export default function Home() {
       </section>
 
 
-      {/* =========================================================
-          TOKEN
-      ========================================================= */}
+      {/* =====================================================
+          TOKENOMICS
+      ===================================================== */}
 
       <section
-        id="token"
-        className="relative z-10 px-5 py-32"
+        id="tokenomics"
+        className="section"
       >
 
-        <div className="mx-auto max-w-6xl">
+        <div className="tokenomics-card">
 
-          <SectionHeading
-            eyebrow="THE TOKEN"
-            title="$BGOD"
-            description="Everything you need to know about Banana God."
-          />
-
-
-          <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-
-            <TokenCard
-              label="TICKER"
-              value="$BGOD"
-            />
-
-            <TokenCard
-              label="NETWORK"
-              value="SOLANA"
-            />
-
-            <TokenCard
-              label="LAUNCH"
-              value="PUMP.FUN"
-            />
-
-            <TokenCard
-              label="STATUS"
-              value="PRE-LAUNCH"
-            />
-
+          <div className="section-label">
+            ◉ &nbsp; TOKENOMICS
           </div>
 
 
-          {/* Contract */}
+          <div className="tokenomics-grid">
 
-          <div className="mt-5 rounded-3xl border border-white/[0.07] bg-white/[0.025] p-6 backdrop-blur-xl sm:p-8">
+            <div className="donut-wrapper">
 
-            <div className="text-center">
+              <div className="donut">
 
-              <div className="text-[9px] font-black uppercase tracking-[0.35em] text-white/25">
+                <div className="donut-center">
+                  🍌
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div className="allocation-list">
+
+              <Allocation
+                color="yellow"
+                name="LIQUIDITY"
+                percentage="60%"
+              />
+
+              <Allocation
+                color="green"
+                name="MARKETING"
+                percentage="20%"
+              />
+
+              <Allocation
+                color="blue"
+                name="COMMUNITY REWARDS"
+                percentage="10%"
+              />
+
+              <Allocation
+                color="orange"
+                name="TEAM (LOCKED)"
+                percentage="10%"
+              />
+
+            </div>
+
+
+            <div className="contract-box">
+
+              <div className="contract-label">
                 CONTRACT ADDRESS
               </div>
 
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+              <div className="contract-value">
 
-                <div className="flex min-h-[55px] flex-1 items-center overflow-hidden rounded-2xl border border-white/[0.06] bg-black/30 px-5 text-xs text-white/25">
+                <span>
                   {CONTRACT_ADDRESS
                     ? CONTRACT_ADDRESS
-                    : "Contract address will appear after launch"}
-                </div>
+                    : "Coming after launch"}
+                </span>
 
                 <button
                   onClick={copyContract}
                   disabled={!CONTRACT_ADDRESS}
-                  className="min-h-[55px] rounded-2xl bg-yellow-400 px-7 text-[10px] font-black tracking-wider text-black transition hover:bg-yellow-300 disabled:cursor-not-allowed disabled:opacity-25"
+                  className="copy-button"
                 >
-                  {copied ? "COPIED ✓" : "COPY ADDRESS"}
+                  {copied ? "✓" : "▣"}
                 </button>
 
               </div>
 
+
+              <a
+                href={
+                  CONTRACT_ADDRESS
+                    ? `https://solscan.io/token/${CONTRACT_ADDRESS}`
+                    : "#"
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="solscan-button"
+              >
+                VIEW ON SOLSCAN
+                <span>→</span>
+              </a>
+
             </div>
 
           </div>
@@ -470,488 +483,301 @@ export default function Home() {
       </section>
 
 
-      {/* =========================================================
+      {/* =====================================================
           ROADMAP
-      ========================================================= */}
+      ===================================================== */}
 
       <section
         id="roadmap"
-        className="relative z-10 px-5 py-32"
+        className="roadmap-section section"
       >
 
-        <div className="mx-auto max-w-5xl">
+        <div className="section-heading">
 
-          <SectionHeading
-            eyebrow="THE JOURNEY"
-            title="ROADMAP"
-            description="The jungle grows one step at a time."
+          <div className="eyebrow">
+            THE ASCENSION
+          </div>
+
+          <h2>
+            THE ROAD TO
+            <span> BANANA GOD.</span>
+          </h2>
+
+          <p>
+            One jungle. One community. One legendary banana.
+          </p>
+
+        </div>
+
+
+        <div className="roadmap-grid">
+
+          <RoadmapCard
+            phase="01"
+            title="THE AWAKENING"
+            text="Banana God launches. The community gathers. The first memes begin to spread."
+            active
           />
 
+          <RoadmapCard
+            phase="02"
+            title="THE JUNGLE"
+            text="Community growth, raids, contests, collaborations and relentless meme warfare."
+          />
 
-          <div className="mt-16 space-y-4">
-
-            <Roadmap
-              number="01"
-              title="THE AWAKENING"
-              description="Launch Banana God. Establish the community. Spread the first wave of banana memes."
-              active
-            />
-
-            <Roadmap
-              number="02"
-              title="THE JUNGLE GROWS"
-              description="Community events, meme contests, raids, collaborations, and expansion across the crypto jungle."
-            />
-
-            <Roadmap
-              number="03"
-              title="THE BANANA EMPIRE"
-              description="Build beyond the launch. Expand the community and create new experiences around the Banana God universe."
-            />
-
-          </div>
+          <RoadmapCard
+            phase="03"
+            title="THE EMPIRE"
+            text="Expand the Banana God universe and build something the jungle won't forget."
+          />
 
         </div>
 
       </section>
 
 
-      {/* =========================================================
-          COMMUNITY CTA
-      ========================================================= */}
+      {/* =====================================================
+          COMMUNITY
+      ===================================================== */}
 
-      <section className="relative z-10 px-5 py-32">
+      <section
+        id="community"
+        className="community-section section"
+      >
 
-        <div className="mx-auto max-w-5xl">
+        <div className="community-card">
 
-          <div className="relative overflow-hidden rounded-[2.5rem] border border-yellow-400/15 bg-gradient-to-b from-yellow-400/[0.09] via-yellow-400/[0.025] to-transparent px-6 py-24 text-center backdrop-blur-xl sm:px-12">
+          <div className="community-content">
 
-            <div className="absolute left-1/2 top-0 h-80 w-80 -translate-x-1/2 rounded-full bg-yellow-400/10 blur-[120px]" />
+            <div className="eyebrow">
+              ♛ &nbsp; JOIN THE CULT
+            </div>
 
-            <div className="relative">
+            <h2>
+              THE BANANA GOD
+              <br />
+              AWAITS YOU.
+            </h2>
 
-              <div
-                className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border border-yellow-400/20 bg-yellow-400/[0.07] text-6xl"
-                style={{
-                  animation: "heroFloat 4s ease-in-out infinite",
-                }}
+            <h3>
+              WILL YOU ANSWER THE CALL?
+            </h3>
+
+
+            <div className="social-row">
+
+              <a
+                href={TELEGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-button"
               >
-                🍌
-              </div>
+                ✈
+              </a>
 
+              <a
+                href={TWITTER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-button"
+              >
+                𝕏
+              </a>
 
-              <div className="mt-8 text-[9px] font-black uppercase tracking-[0.45em] text-yellow-400">
-                THE JUNGLE IS OPEN
-              </div>
-
-
-              <h2 className="mt-5 text-4xl font-black tracking-tight sm:text-6xl">
-                JOIN THE JUNGLE
-              </h2>
-
-
-              <p className="mx-auto mt-6 max-w-lg text-sm leading-7 text-white/40">
-                The community is where Banana God lives.
-                Bring your memes. Bring your energy.
-                Enter the jungle early.
-              </p>
-
-
-              <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-
-                <SocialBubble
-                  href={TELEGRAM_URL}
-                  icon="✈"
-                  label="TELEGRAM"
-                  external
-                  primary
-                />
-
-                <SocialBubble
-                  href={TWITTER_URL}
-                  icon="𝕏"
-                  label="FOLLOW ON X"
-                  external
-                />
-
-              </div>
+              {PUMP_URL && (
+                <a
+                  href={PUMP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-button"
+                >
+                  ↗
+                </a>
+              )}
 
             </div>
 
           </div>
 
-        </div>
 
-      </section>
+          <div className="community-art">
 
+            <div className="community-halo" />
 
-      {/* =========================================================
-          FOOTER
-      ========================================================= */}
-
-      <footer className="relative z-10 border-t border-white/[0.06] px-5 py-12">
-
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-7 sm:flex-row">
-
-          <div className="flex items-center gap-3">
-
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400/10 text-xl">
+            <div className="cool-banana">
               🍌
             </div>
 
-            <div>
-
-              <div className="text-xs font-black tracking-[0.2em] text-yellow-400">
-                BANANA GOD
-              </div>
-
-              <div className="mt-1 text-[8px] tracking-[0.3em] text-white/20">
-                $BGOD • SOLANA
-              </div>
-
+            <div className="pixel-glasses">
+              ▰ ▰
             </div>
 
           </div>
 
+        </div>
 
-          <div className="text-center text-[9px] tracking-[0.2em] text-white/20">
-            ALL HAIL BANANA GOD
-          </div>
+      </section>
 
 
-          <div className="flex gap-5">
+      {/* =====================================================
+          FOOTER
+      ===================================================== */}
 
-            <a
-              href={TWITTER_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-bold text-white/30 transition hover:text-yellow-400"
-            >
-              𝕏
-            </a>
+      <footer>
 
-            <a
-              href={TELEGRAM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-bold text-white/30 transition hover:text-yellow-400"
-            >
-              ✈
-            </a>
+        <div className="footer-brand">
 
-          </div>
+          <span>
+            🍌
+          </span>
+
+          BANANA GOD
+
+        </div>
+
+        <div className="footer-middle">
+          $BGOD • SOLANA
+        </div>
+
+        <div className="footer-links">
+
+          <a
+            href={TWITTER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            𝕏
+          </a>
+
+          <a
+            href={TELEGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ✈
+          </a>
 
         </div>
 
       </footer>
-
-
-      {/* =========================================================
-          ANIMATION STYLES
-      ========================================================= */}
-
-      <style jsx global>{`
-
-        @keyframes pulseGlow {
-          0%, 100% {
-            transform: scale(1);
-            opacity: 0.45;
-          }
-
-          50% {
-            transform: scale(1.2);
-            opacity: 0.8;
-          }
-        }
-
-        @keyframes driftOne {
-          0%, 100% {
-            transform: translate3d(0, 0, 0);
-          }
-
-          50% {
-            transform: translate3d(120px, 80px, 0);
-          }
-        }
-
-        @keyframes driftTwo {
-          0%, 100% {
-            transform: translate3d(0, 0, 0);
-          }
-
-          50% {
-            transform: translate3d(-100px, -70px, 0);
-          }
-        }
-
-        @keyframes particleFloat {
-          0%, 100% {
-            transform: translateY(0px);
-            opacity: 0.15;
-          }
-
-          50% {
-            transform: translateY(-35px);
-            opacity: 0.8;
-          }
-        }
-
-        @keyframes heroFloat {
-          0%, 100% {
-            transform: translateY(0px) rotate(-1deg);
-          }
-
-          50% {
-            transform: translateY(-14px) rotate(1deg);
-          }
-        }
-
-        @keyframes spinSlow {
-          from {
-            transform: rotate(0deg);
-          }
-
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        @keyframes spinReverse {
-          from {
-            transform: rotate(360deg);
-          }
-
-          to {
-            transform: rotate(0deg);
-          }
-        }
-
-        @keyframes fadeUp {
-          from {
-            opacity: 0;
-            transform: translateY(25px);
-          }
-
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          *,
-          *::before,
-          *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            scroll-behavior: auto !important;
-          }
-        }
-
-      `}</style>
 
     </main>
   );
 }
 
 
-/* =============================================================
-   SOCIAL BUBBLE
-============================================================= */
+/* =========================================================
+   COMPONENTS
+========================================================= */
 
-function SocialBubble({
-  href,
+function Feature({
   icon,
-  label,
-  external = false,
-  primary = false,
-}: {
-  href: string;
-  icon: string;
-  label: string;
-  external?: boolean;
-  primary?: boolean;
-}) {
-  return (
-    <a
-      href={href}
-      target={external ? "_blank" : undefined}
-      rel={external ? "noopener noreferrer" : undefined}
-      className={`
-        group flex items-center gap-2 rounded-full border px-5 py-3 text-[10px] font-black tracking-wider backdrop-blur-xl transition-all duration-300
-        ${
-          primary
-            ? "border-yellow-400/30 bg-yellow-400/10 text-yellow-400 hover:scale-105 hover:bg-yellow-400 hover:text-black hover:shadow-[0_0_35px_rgba(250,204,21,0.18)]"
-            : "border-white/10 bg-white/[0.035] text-white/55 hover:scale-105 hover:border-yellow-400/25 hover:bg-yellow-400/[0.07] hover:text-yellow-400"
-        }
-      `}
-    >
-      <span className="text-sm transition-transform duration-300 group-hover:scale-125">
-        {icon}
-      </span>
-
-      {label}
-
-      <span className="text-[9px] opacity-30 transition-transform duration-300 group-hover:translate-x-1">
-        →
-      </span>
-    </a>
-  );
-}
-
-
-/* =============================================================
-   SECTION HEADING
-============================================================= */
-
-function SectionHeading({
-  eyebrow,
   title,
-  description,
+  subtitle,
 }: {
-  eyebrow: string;
+  icon: string;
   title: string;
-  description: string;
+  subtitle?: string;
 }) {
   return (
-    <div className="mx-auto max-w-3xl text-center">
+    <div className="feature">
 
-      <div className="text-[9px] font-black uppercase tracking-[0.45em] text-yellow-400">
-        {eyebrow}
+      <div className="feature-icon">
+        {icon}
       </div>
 
-      <h2 className="mt-5 text-4xl font-black tracking-tight sm:text-6xl">
-        {title}
-      </h2>
+      <div>
+        <strong>
+          {title}
+        </strong>
 
-      <p className="mt-5 text-sm text-white/30">
-        {description}
-      </p>
+        {subtitle && (
+          <small>
+            {subtitle}
+          </small>
+        )}
+      </div>
 
     </div>
   );
 }
 
 
-/* =============================================================
-   GLASS CARD
-============================================================= */
+function Stat({
+  value,
+  label,
+}: {
+  value: string;
+  label: string;
+}) {
+  return (
+    <div className="stat">
 
-function GlassCard({
-  icon,
+      <strong>
+        {value}
+      </strong>
+
+      <span>
+        {label}
+      </span>
+
+    </div>
+  );
+}
+
+
+function Allocation({
+  color,
+  name,
+  percentage,
+}: {
+  color: string;
+  name: string;
+  percentage: string;
+}) {
+  return (
+    <div className="allocation">
+
+      <div className={`allocation-dot ${color}`} />
+
+      <span>
+        {name}
+      </span>
+
+      <strong>
+        {percentage}
+      </strong>
+
+    </div>
+  );
+}
+
+
+function RoadmapCard({
+  phase,
   title,
   text,
-}: {
-  icon: string;
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className="group relative overflow-hidden rounded-3xl border border-white/[0.07] bg-white/[0.025] p-8 text-center backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:border-yellow-400/20 hover:bg-yellow-400/[0.035]">
-
-      <div className="absolute left-1/2 top-0 h-32 w-32 -translate-x-1/2 rounded-full bg-yellow-400/0 blur-[60px] transition-all duration-500 group-hover:bg-yellow-400/10" />
-
-      <div className="relative">
-
-        <div className="text-5xl transition duration-500 group-hover:scale-110">
-          {icon}
-        </div>
-
-        <h3 className="mt-6 text-sm font-black tracking-[0.2em] text-yellow-400">
-          {title}
-        </h3>
-
-        <p className="mt-4 text-sm leading-7 text-white/35">
-          {text}
-        </p>
-
-      </div>
-
-    </div>
-  );
-}
-
-
-/* =============================================================
-   TOKEN CARD
-============================================================= */
-
-function TokenCard({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="group rounded-2xl border border-white/[0.07] bg-white/[0.025] p-7 text-center backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-yellow-400/20">
-
-      <div className="text-[9px] font-black tracking-[0.3em] text-white/25">
-        {label}
-      </div>
-
-      <div className="mt-3 text-lg font-black text-yellow-400">
-        {value}
-      </div>
-
-    </div>
-  );
-}
-
-
-/* =============================================================
-   ROADMAP
-============================================================= */
-
-function Roadmap({
-  number,
-  title,
-  description,
   active = false,
 }: {
-  number: string;
+  phase: string;
   title: string;
-  description: string;
+  text: string;
   active?: boolean;
 }) {
   return (
-    <div
-      className={`group relative overflow-hidden rounded-3xl border p-7 backdrop-blur-xl transition duration-500 sm:p-9 ${
-        active
-          ? "border-yellow-400/20 bg-yellow-400/[0.045]"
-          : "border-white/[0.07] bg-white/[0.025] hover:border-yellow-400/15 hover:bg-white/[0.04]"
-      }`}
-    >
+    <div className={`roadmap-card ${active ? "roadmap-active" : ""}`}>
 
-      <div className="flex gap-6">
-
-        <div
-          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-xs font-black ${
-            active
-              ? "bg-yellow-400 text-black"
-              : "border border-white/10 bg-white/[0.04] text-yellow-400"
-          }`}
-        >
-          {number}
-        </div>
-
-        <div>
-
-          <div className="text-[9px] font-black tracking-[0.3em] text-yellow-400">
-            PHASE {number}
-          </div>
-
-          <h3 className="mt-2 text-xl font-black sm:text-2xl">
-            {title}
-          </h3>
-
-          <p className="mt-3 max-w-2xl text-sm leading-7 text-white/35">
-            {description}
-          </p>
-
-        </div>
-
+      <div className="phase">
+        PHASE {phase}
       </div>
+
+      <h3>
+        {title}
+      </h3>
+
+      <p>
+        {text}
+      </p>
 
     </div>
   );
