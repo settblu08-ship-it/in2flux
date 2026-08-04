@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "Banana God | $BGOD",
   description:
     "Worship the banana. Build the legend. Banana God is a community-powered meme coin on Solana.",
+
+  applicationName: "Banana God",
+
   keywords: [
     "Banana God",
     "$BGOD",
@@ -14,6 +17,7 @@ export const metadata: Metadata = {
     "memecoin",
     "crypto",
   ],
+
   openGraph: {
     title: "Banana God | $BGOD",
     description:
@@ -21,6 +25,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Banana God",
   },
+
   twitter: {
     card: "summary_large_image",
     title: "Banana God | $BGOD",
