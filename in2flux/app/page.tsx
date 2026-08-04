@@ -1,385 +1,87 @@
-"use client";
-
-import { motion } from "framer-motion";
-import Link from "next/link";
-
 export default function Home() {
-
-const bubbles = [
-  "Your thoughts",
-  "Your memories",
-  "Your patterns",
-  "Your evolution"
-];
-
-
-return (
-
-<main className="relative min-h-screen overflow-hidden bg-black text-white">
-
-
-{/* Deep mystical room background */}
-
-<div className="
-absolute
-inset-0
-bg-gradient-to-b
-from-indigo-950
-via-purple-950
-to-black
-"/>
-
-
-{/* Room light source */}
-
-<motion.div
-
-animate={{
-scale:[1,1.3,1],
-opacity:[0.25,0.5,0.25]
-}}
-
-transition={{
-duration:10,
-repeat:Infinity
-}}
-
-className="
-absolute
-top-10
-left-1/2
--translate-x-1/2
-h-[700px]
-w-[700px]
-rounded-full
-bg-purple-600/30
-blur-[140px]
-"
-
-/>
-
-
-
-{/* Floating stars */}
-
-{Array.from({length:160}).map((_,i)=>(
-
-<motion.div
-
-key={i}
-
-className="
-absolute
-rounded-full
-bg-white
-"
-
-style={{
-height: Math.random()*3+"px",
-width: Math.random()*3+"px",
-left:`${Math.random()*100}%`,
-top:`${Math.random()*100}%`
-}}
-
-animate={{
-opacity:[0.1,1,0.1],
-scale:[1,1.8,1]
-}}
-
-transition={{
-duration:3+Math.random()*6,
-repeat:Infinity
-}}
-
-/>
-
-))}
-
-
-
-{/* Floating memory bubbles */}
-
-{bubbles.map((bubble,index)=>(
-
-<motion.div
-
-key={bubble}
-
-animate={{
-y:[0,-25,0],
-rotate:[0,5,-5,0]
-}}
-
-transition={{
-duration:5+index,
-repeat:Infinity
-}}
-
-className={`
-absolute
-hidden
-md:flex
-rounded-full
-border
-border-white/20
-bg-white/10
-backdrop-blur-xl
-px-6
-py-3
-text-sm
-text-zinc-200
-${[
-"top-32 left-20",
-"top-52 right-24",
-"bottom-40 left-32",
-"bottom-32 right-28"
-][index]}
-`}
-
->
-
-{bubble}
-
-</motion.div>
-
-))}
-
-
-
-<section className="
-relative
-z-10
-flex
-min-h-screen
-flex-col
-items-center
-justify-center
-px-6
-text-center
-">
-
-
-
-{/* Orb Logo */}
-
-<motion.div
-
-animate={{
-y:[0,-15,0],
-rotate:[0,360]
-}}
-
-transition={{
-rotate:{
-duration:30,
-repeat:Infinity,
-ease:"linear"
-},
-y:{
-duration:5,
-repeat:Infinity
-}
-}}
-
-className="
-relative
-flex
-h-64
-w-64
-items-center
-justify-center
-rounded-full
-border
-border-cyan-300/30
-bg-gradient-to-br
-from-cyan-400/20
-via-purple-600/40
-to-black
-shadow-[0_0_120px_rgba(168,85,247,.7)]
-backdrop-blur-3xl
-"
-
-
->
-
-
-{/* Inner rings */}
-
-<div className="
-absolute
-h-48
-w-48
-rounded-full
-border
-border-purple-400/30
-"/>
-
-
-<div className="
-absolute
-h-32
-w-32
-rounded-full
-border
-border-cyan-300/30
-"/>
-
-
-
-{/* Message bubbles inside orb */}
-
-<div className="
-absolute
-top-12
-left-14
-h-5
-w-5
-rounded-full
-bg-white
-shadow-lg
-"/>
-
-
-<div className="
-absolute
-bottom-16
-right-16
-h-8
-w-8
-rounded-full
-bg-cyan-300/60
-"/>
-
-
-<div className="
-absolute
-bottom-20
-left-20
-h-3
-w-3
-bg-purple-300
-rounded-full
-"/>
-
-
-<span className="
-text-5xl
-font-bold
-">
-
-Flux
-
-</span>
-
-
-</motion.div>
-
-
-
-
-<motion.h1
-
-initial={{
-opacity:0,
-y:40
-}}
-
-animate={{
-opacity:1,
-y:0
-}}
-
-transition={{
-duration:1
-}}
-
-className="
-mt-12
-text-7xl
-font-bold
-tracking-tight
-"
-
->
-
-In2Flux
-
-</motion.h1>
-
-
-
-<motion.p
-
-initial={{
-opacity:0
-}}
-
-animate={{
-opacity:1
-}}
-
-transition={{
-delay:0.5
-}}
-
-className="
-mt-6
-max-w-2xl
-text-xl
-text-zinc-300
-"
-
->
-
-A living AI companion that remembers your journey,
-connects your thoughts, and helps you understand yourself.
-
-</motion.p>
-
-
-
-
-<Link href="/flux">
-
-<motion.button
-
-whileHover={{
-scale:1.1
-}}
-
-whileTap={{
-scale:.95
-}}
-
-className="
-mt-14
-rounded-full
-bg-gradient-to-r
-from-purple-500
-via-cyan-400
-to-blue-500
-px-12
-py-5
-text-xl
-font-bold
-shadow-[0_0_40px_rgba(34,211,238,.5)]
-"
-
->
-
-Enter Flux
-
-</motion.button>
-
-</Link>
-
-
-
-</section>
-
-
-</main>
-
-);
-
+  return (
+    <main className="min-h-screen bg-black text-white">
+      {/* Hero */}
+      <section className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
+        <h1 className="text-6xl font-black text-yellow-400 md:text-8xl">
+          🍌 BANANA GOD
+        </h1>
+
+        <p className="mt-6 max-w-xl text-xl text-gray-300">
+          The chosen banana has arrived. A community-powered meme coin
+          built on Solana.
+        </p>
+
+        <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <a
+            href="#"
+            className="rounded-full bg-yellow-400 px-8 py-4 font-bold text-black"
+          >
+            Buy $BGOD
+          </a>
+
+          <a
+            href="#"
+            className="rounded-full border border-yellow-400 px-8 py-4 font-bold text-yellow-400"
+          >
+            Join Telegram
+          </a>
+        </div>
+      </section>
+
+      {/* About */}
+      <section className="mx-auto max-w-4xl px-6 py-20 text-center">
+        <h2 className="text-4xl font-bold text-yellow-400">
+          What is Banana God?
+        </h2>
+
+        <p className="mt-6 text-lg text-gray-300">
+          Banana God is a meme-powered community on Solana.
+          No complicated promises. Just memes, community, and banana energy.
+        </p>
+      </section>
+
+      {/* Token Info */}
+      <section className="mx-auto max-w-4xl px-6 py-20">
+        <h2 className="text-4xl font-bold text-yellow-400 text-center">
+          Token Information
+        </h2>
+
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          <div className="rounded-xl border border-yellow-400/30 p-6 text-center">
+            <h3 className="font-bold">Ticker</h3>
+            <p className="mt-2">$BGOD</p>
+          </div>
+
+          <div className="rounded-xl border border-yellow-400/30 p-6 text-center">
+            <h3 className="font-bold">Chain</h3>
+            <p className="mt-2">Solana</p>
+          </div>
+
+          <div className="rounded-xl border border-yellow-400/30 p-6 text-center">
+            <h3 className="font-bold">Launch</h3>
+            <p className="mt-2">Pump.fun</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Roadmap */}
+      <section className="mx-auto max-w-4xl px-6 py-20 text-center">
+        <h2 className="text-4xl font-bold text-yellow-400">
+          Roadmap
+        </h2>
+
+        <div className="mt-8 space-y-4 text-lg">
+          <p>🍌 Phase 1 — Launch & Community</p>
+          <p>🌴 Phase 2 — Grow the Jungle</p>
+          <p>👑 Phase 3 — Banana Empire</p>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/10 py-10 text-center text-gray-400">
+        🍌 ALL HAIL BANANA GOD 🍌
+      </footer>
+    </main>
+  );
 }
