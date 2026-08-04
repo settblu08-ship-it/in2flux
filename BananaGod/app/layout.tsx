@@ -7,23 +7,28 @@ export const metadata: Metadata = {
     "Banana God — the chosen banana. A community-driven meme coin on Solana.",
   keywords: [
     "Banana God",
+    "$BGOD",
     "BGOD",
     "Solana",
     "meme coin",
-    "crypto",
     "memecoin",
+    "crypto",
   ],
+  icons: {
+    icon: "/favicon.ico",
+  },
   openGraph: {
     title: "Banana God | $BGOD",
     description:
-      "The chosen banana has arrived. All hail Banana God.",
+      "The jungle has a ruler. The banana has spoken. All hail Banana God.",
     type: "website",
+    siteName: "Banana God",
   },
   twitter: {
     card: "summary_large_image",
     title: "Banana God | $BGOD",
     description:
-      "The chosen banana has arrived. All hail Banana God.",
+      "The jungle has a ruler. The banana has spoken. All hail Banana God.",
   },
 };
 
@@ -34,6 +39,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta
+          name="theme-color"
+          content="#030303"
+        />
+
+        <meta
+          name="mobile-web-app-capable"
+          content="yes"
+        />
+
+        <meta
+          name="apple-mobile-web-app-capable"
+          content="yes"
+        />
+
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
+      </head>
+
       <body>{children}</body>
     </html>
   );

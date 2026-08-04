@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050505;
+  --background: #030303;
   --foreground: #ffffff;
+  --banana: #facc15;
+  --banana-light: #fef08a;
+  --banana-dark: #ca8a04;
+  --jungle: #171a08;
 }
 
 * {
@@ -11,20 +15,48 @@
 
 html {
   scroll-behavior: smooth;
+  background: #030303;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
   background:
     radial-gradient(
-      circle at 50% -10%,
-      rgba(250, 204, 21, 0.12),
-      transparent 35%
+      circle at 50% 0%,
+      rgba(250, 204, 21, 0.09),
+      transparent 32%
     ),
-    #050505;
+    radial-gradient(
+      circle at 0% 50%,
+      rgba(234, 88, 12, 0.045),
+      transparent 30%
+    ),
+    #030303;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.035) 0,
+      transparent 1px
+    );
+  background-size: 28px 28px;
+  opacity: 0.35;
 }
 
 a {
@@ -37,60 +69,387 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-::selection {
-  background: #facc15;
-  color: #000000;
+button {
+  font-family: inherit;
 }
 
-/* Smooth scrollbar */
+::selection {
+  background: var(--banana);
+  color: #000;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: #030303;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(250, 204, 21, 0.35);
   border-radius: 999px;
+  background: rgba(250, 204, 21, 0.2);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(250, 204, 21, 0.6);
+  background: rgba(250, 204, 21, 0.45);
 }
 
-/* Floating animation */
 
-@keyframes float {
+/* =========================================================
+   GLASS SYSTEM
+========================================================= */
+
+.glass {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.glass-yellow {
+  border: 1px solid rgba(250, 204, 21, 0.14);
+  background: rgba(250, 204, 21, 0.045);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+
+/* =========================================================
+   GLOW SYSTEM
+========================================================= */
+
+.banana-glow {
+  box-shadow:
+    0 0 30px rgba(250, 204, 21, 0.08),
+    0 0 90px rgba(250, 204, 21, 0.06);
+}
+
+.banana-glow-strong {
+  box-shadow:
+    0 0 30px rgba(250, 204, 21, 0.14),
+    0 0 100px rgba(250, 204, 21, 0.1),
+    inset 0 0 40px rgba(250, 204, 21, 0.035);
+}
+
+
+/* =========================================================
+   FLOATING ANIMATIONS
+========================================================= */
+
+@keyframes bananaFloat {
   0%,
   100% {
-    transform: translateY(0px);
+    transform: translateY(0) rotate(-1deg);
   }
 
   50% {
-    transform: translateY(-12px);
+    transform: translateY(-16px) rotate(1deg);
   }
 }
 
-.animate-float {
-  animation: float 4s ease-in-out infinite;
+.banana-float {
+  animation: bananaFloat 5s ease-in-out infinite;
 }
 
-/* Glow animation */
 
-@keyframes glow {
+@keyframes gentleFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.gentle-float {
+  animation: gentleFloat 4s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   ORBITS
+========================================================= */
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbitReverse {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.orbit {
+  animation: orbit 22s linear infinite;
+}
+
+.orbit-reverse {
+  animation: orbitReverse 30s linear infinite;
+}
+
+
+/* =========================================================
+   AMBIENT GLOW
+========================================================= */
+
+@keyframes ambientPulse {
   0%,
   100% {
     opacity: 0.35;
+    transform: scale(1);
   }
 
   50% {
-    opacity: 0.7;
+    opacity: 0.75;
+    transform: scale(1.18);
   }
 }
 
-.animate-glow {
-  animation: glow 4s ease-in-out infinite;
+.ambient-pulse {
+  animation: ambientPulse 7s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   MOVING LIGHT
+========================================================= */
+
+@keyframes lightDrift {
+  0% {
+    transform: translate3d(-10%, -5%, 0);
+  }
+
+  50% {
+    transform: translate3d(10%, 7%, 0);
+  }
+
+  100% {
+    transform: translate3d(-10%, -5%, 0);
+  }
+}
+
+.light-drift {
+  animation: lightDrift 16s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+@keyframes particleRise {
+  0% {
+    transform: translateY(0) scale(0.7);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translateY(-70px) scale(1);
+    opacity: 0;
+  }
+}
+
+.particle {
+  animation: particleRise 6s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   FADE / ENTRY
+========================================================= */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.9s ease-out both;
+}
+
+
+/* =========================================================
+   SHIMMER
+========================================================= */
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.banana-text {
+  background:
+    linear-gradient(
+      110deg,
+      #ca8a04,
+      #facc15,
+      #fef08a,
+      #facc15,
+      #ca8a04
+    );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+
+/* =========================================================
+   BUBBLE INTERACTION
+========================================================= */
+
+.banana-bubble {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease,
+    background 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.banana-bubble::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: radial-gradient(
+    circle,
+    rgba(250, 204, 21, 0.13),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.banana-bubble:hover {
+  transform: translateY(-5px) scale(1.025);
+  border-color: rgba(250, 204, 21, 0.25);
+  background: rgba(250, 204, 21, 0.055);
+  box-shadow:
+    0 15px 50px rgba(0, 0, 0, 0.25),
+    0 0 35px rgba(250, 204, 21, 0.06);
+}
+
+.banana-bubble:hover::before {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   HERO RING
+========================================================= */
+
+.hero-ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px solid rgba(250, 204, 21, 0.11);
+  pointer-events: none;
+}
+
+.hero-ring-inner {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px dashed rgba(250, 204, 21, 0.09);
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   PREMIUM CARD HOVER
+========================================================= */
+
+.premium-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  background: rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition:
+    transform 0.45s ease,
+    border-color 0.45s ease,
+    background 0.45s ease;
+}
+
+.premium-card::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -100px;
+  width: 180px;
+  height: 180px;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: rgba(250, 204, 21, 0.08);
+  filter: blur(60px);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.premium-card:hover {
+  transform: translateY(-7px);
+  border-color: rgba(250, 204, 21, 0.17);
+  background: rgba(250, 204, 21, 0.035);
+}
+
+.premium-card:hover::after {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
 }
